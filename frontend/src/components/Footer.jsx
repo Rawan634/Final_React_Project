@@ -66,14 +66,20 @@ const Footer = () => {
 
       {/* Task List */}
       <div className="mt-4">
-        {tasks.length > 0 ? (
-          tasks.map((task, index) => (
-            <TaskCard key={index} task={task} onDelete={() => deleteTask(index)} onUpdate={(updatedTask) => updateTask(updatedTask, index)} />
-          ))
-        ) : (
-          <p className="text-muted text-center mt-3">No tasks found...</p>
-        )}
-      </div>
+      {tasks.length > 0 ? (
+        <div className="row justify-content-center">
+          {tasks.map((task, index) => (
+            <div key={index} className="col-md-4">
+              <TaskCard task={task} onDelete={() => deleteTask(index)} onUpdate={(updatedTask) => updateTask(updatedTask, index)} />
+            </div>
+          ))}
+            </div>
+      ) : (
+            <div className="text-center text-muted mt-5">
+          <h4>No tasks yet, add one!</h4>
+        </div>
+      )}
+    </div>
 
       {tasks.length > 0 && (
         <button className="btn btn-danger w-100 mt-3" onClick={() => setTasks([])}>🗑️ Delete All</button>

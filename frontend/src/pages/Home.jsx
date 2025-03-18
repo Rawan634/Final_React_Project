@@ -4,7 +4,6 @@ import TaskCard from "../components/Taskcard";
 import Footer from "../components/Footer";
 
 const Home = () => {
-
   return (
     <div className="container-fluid">
       <div className="row">
@@ -16,15 +15,21 @@ const Home = () => {
           <Header />
 
           {/* Task Cards */}
-          <div className="container-fluid flex-grow-1 p-3">
-            <div className="row">
-              {tasks.map((task, index) => (
-                <div key={index} className="col-md-4">
-                  <TaskCard task={task} />
-                </div>
-              ))}
-            </div>
-          </div>
+          <div className="container-fluid flex-grow-1 p-3 d-flex flex-column">
+           <div className="row justify-content-center">
+             {tasks.length > 0 ? (
+               tasks.map((task, index) => (
+                 <div key={index} className="col-md-4">
+                   <TaskCard task={task} />
+                 </div>
+               ))
+             ) : (
+               <div className="col-12 text-center text-muted mt-5">
+                 <h4>No tasks available...</h4>
+               </div>
+             )}
+           </div>
+         </div>
 
           <Footer />
         </div>
