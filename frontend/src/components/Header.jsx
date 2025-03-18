@@ -4,11 +4,11 @@ const Header = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
-    onSearch(searchQuery.trim()); // Call parent search function
+    onSearch(searchQuery.trim()); 
   };
 
   return (
-    <div className="bg-primary text-white p-4 rounded-4">
+    <div className="bg-primary text-white p-4 rounded-4 header">
       <div className="d-flex justify-content-between align-items-center">
         <h4>Task Manager</h4>
         <div className="d-flex gap-2">

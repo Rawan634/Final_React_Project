@@ -17,6 +17,10 @@
   display: flex;
   flex-direction: column;
 }
+.header,
+.footer {
+  width: 100%; 
+}
 
 a {
   font-weight: 500;
