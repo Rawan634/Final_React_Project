@@ -4,14 +4,6 @@ import TaskCard from "../components/Taskcard";
 import Footer from "../components/Footer";
 
 const Home = () => {
-  const tasks = [
-    { title: "Task 1", description: "Description 1", status: "In Progress", priority: "High" },
-    { title: "Task 2", description: "Description 2", status: "Completed", priority: "Medium" },
-    { title: "Task 3", description: "Description 3", status: "In Progress", priority: "Low" },
-    { title: "Task 4", description: "Description 4", status: "Completed", priority: "High" },
-    { title: "Task 5", description: "Description 5", status: "In Progress", priority: "Medium" },
-    { title: "Task 6", description: "Description 6", status: "Completed", priority: "Low" },
-  ];
 
   return (
     <div className="container-fluid">
