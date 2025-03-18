@@ -12,6 +12,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.col-md-10 {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.header,
+.footer {
+  width: 100%; 
+}
 
 a {
   font-weight: 500;
