@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import TaskCard from "./Taskcard";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,10 +12,10 @@ const Footer = () => {
     setNewTask({ ...newTask, [e.target.name]: e.target.value });
   };
 
-  // Add New Task
+  // Add New Task (Add to Beginning)
   const addTask = () => {
     if (!newTask.title.trim()) return;
-    setTasks([...tasks, newTask]);
+    setTasks([newTask, ...tasks]); // Now tasks will appear at the top
     setNewTask({ title: "", description: "", dueDate: "", priority: "Medium", status: "Pending" });
   };
 
@@ -23,7 +24,7 @@ const Footer = () => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
-  // Update Task (from TaskCard)
+  // Update Task
   const updateTask = (updatedTask, index) => {
     const updatedTasks = [...tasks];
     updatedTasks[index] = updatedTask;
@@ -32,7 +33,18 @@ const Footer = () => {
 
   return (
     <div className="container mt-4">
-      {/* Task Input Section */}
+      {/* 🔹 Task List (Rendered Above Input Section) */}
+      <div className="mt-4">
+        {tasks.length > 0 ? (
+          tasks.map((task, index) => (
+            <TaskCard key={index} task={task} onDelete={() => deleteTask(index)} onUpdate={(updatedTask) => updateTask(updatedTask, index)} />
+          ))
+        ) : (
+          <p className="text-muted text-center mt-3">No tasks found...</p>
+        )}
+      </div>
+
+      {/* 🔹 Task Input Section (Below Task List) */}
       <div className="card shadow-lg p-4 mt-3">
         <h2 className="text-center text-primary mb-3">📋 Task Manager</h2>
         <div className="row g-3">
@@ -61,17 +73,6 @@ const Footer = () => {
           </div>
         </div>
         <button className="btn btn-primary w-100 mt-3" onClick={addTask}>➕ Add Task</button>
-      </div>
-
-      {/* Task List */}
-      <div className="mt-4">
-        {tasks.length > 0 ? (
-          tasks.map((task, index) => (
-            <TaskCard key={index} task={task} onDelete={() => deleteTask(index)} onUpdate={(updatedTask) => updateTask(updatedTask, index)} />
-          ))
-        ) : (
-          <p className="text-muted text-center mt-3">No tasks found...</p>
-        )}
       </div>
 
       {tasks.length > 0 && (
