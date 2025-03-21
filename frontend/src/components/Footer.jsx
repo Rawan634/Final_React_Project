@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 const Footer = ({ filters }) => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.tasks);
-  const searchQuery = useSelector((state) => state.tasks.searchQuery); 
+  const searchQuery = useSelector((state) => state.tasks.searchQuery); // 🔍 Get search query
   const [filteredTasks, setFilteredTasks] = useState(tasks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({ title: "", description: "", dueDate: "", priority: "Medium", status: "Pending" });
@@ -14,17 +14,17 @@ const Footer = ({ filters }) => {
   useEffect(() => {
     let tempTasks = tasks;
 
-    
+    // Apply filters
     if (filters.status) tempTasks = tempTasks.filter((x) => x.status === filters.status);
     if (filters.priority) tempTasks = tempTasks.filter((x) => x.priority === filters.priority);
 
-    // Apply search
+    // Apply search filter (title matching)
     if (searchQuery.trim()) {
       tempTasks = tempTasks.filter((task) => task.title.toLowerCase().includes(searchQuery.toLowerCase()));
     }
 
     setFilteredTasks(tempTasks);
-  }, [filters, tasks, searchQuery]); 
+  }, [filters, tasks, searchQuery]); // Re-run when searchQuery changes
 
   const handleChange = (e) => {
     setNewTask({ ...newTask, [e.target.name]: e.target.value });
@@ -38,9 +38,9 @@ const Footer = ({ filters }) => {
   };
 
   return (
-    <div className="container mt-4 ">
+    <div className="container mt-4">
       {/* Task List */}
-      <div className="mt-4 d-flex flex-wrap justify-content-center gap-3 ">
+      <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
         {filteredTasks.length > 0 ? (
           filteredTasks.map((task, index) => (
             <TaskCard key={index} task={task} onDelete={() => dispatch(deleteTask(index))} onUpdate={(updatedTask) => dispatch(updateTask({ index, updatedTask }))} />
@@ -51,8 +51,8 @@ const Footer = ({ filters }) => {
       </div>
 
       {/* Footer Buttons */}
-      <div className="d-flex justify-content-center gap-3 mt-4 bg-primary p-4 rounded-4">
-        <button className="btn btn-light px-4" onClick={() => setIsModalOpen(true)}>➕ Add Task</button>
+      <div className="d-flex justify-content-center gap-3 mt-4">
+        <button className="btn btn-primary px-4" onClick={() => setIsModalOpen(true)}>➕ Add Task</button>
         <button className="btn btn-danger px-4" onClick={() => dispatch(clearTasks())}>🗑️ Delete All</button>
       </div>
 

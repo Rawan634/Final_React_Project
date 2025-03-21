@@ -4,10 +4,10 @@ import { useState } from "react";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const [inputValue, setInputValue] = useState(""); 
+  const [inputValue, setInputValue] = useState(""); // Local state for search input
 
   const handleSearch = () => {
-    dispatch(setSearchQuery(inputValue.trim())); 
+    dispatch(setSearchQuery(inputValue.trim())); // Dispatch only on button click
   };
 
   return (
@@ -20,7 +20,7 @@ const Header = () => {
             className="form-control"
             placeholder="Search tasks..."
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)} 
+            onChange={(e) => setInputValue(e.target.value)} // Update local state
           />
           <button className="btn btn-light" onClick={handleSearch}>
             🔍 Search
