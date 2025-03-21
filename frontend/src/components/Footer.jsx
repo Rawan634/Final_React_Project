@@ -32,10 +32,15 @@ const Footer = ({ filters }) => {
 
   const handleAddTask = () => {
     if (!newTask.title.trim()) return;
+    
+    console.log("Adding task:", newTask); // Debugging log
+    
     dispatch(addTask(newTask));
+  
     setNewTask({ title: "", description: "", dueDate: "", priority: "Medium", status: "Pending" });
     setIsModalOpen(false);
   };
+  
 
   return (
     <div className="container mt-4">
@@ -51,8 +56,8 @@ const Footer = ({ filters }) => {
       </div>
 
       {/* Footer Buttons */}
-      <div className="d-flex justify-content-center gap-3 mt-4">
-        <button className="btn btn-primary px-4" onClick={() => setIsModalOpen(true)}>➕ Add Task</button>
+      <div className="d-flex justify-content-center gap-3 mt-4 bg-primary text-white p-4 rounded-4 header">
+        <button className="btn btn-light px-4" onClick={() => setIsModalOpen(true)}>➕ Add Task</button>
         <button className="btn btn-danger px-4" onClick={() => dispatch(clearTasks())}>🗑️ Delete All</button>
       </div>
 
