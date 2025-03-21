@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 const Footer = ({ filters }) => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.tasks);
-  const searchQuery = useSelector((state) => state.tasks.searchQuery); // 🔍 Get search query
+  const searchQuery = useSelector((state) => state.tasks.searchQuery); 
   const [filteredTasks, setFilteredTasks] = useState(tasks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({ title: "", description: "", dueDate: "", priority: "Medium", status: "Pending" });
@@ -18,13 +18,13 @@ const Footer = ({ filters }) => {
     if (filters.status) tempTasks = tempTasks.filter((x) => x.status === filters.status);
     if (filters.priority) tempTasks = tempTasks.filter((x) => x.priority === filters.priority);
 
-    // Apply search filter (title matching)
+    // Apply search filter
     if (searchQuery.trim()) {
       tempTasks = tempTasks.filter((task) => task.title.toLowerCase().includes(searchQuery.toLowerCase()));
     }
 
     setFilteredTasks(tempTasks);
-  }, [filters, tasks, searchQuery]); // Re-run when searchQuery changes
+  }, [filters, tasks, searchQuery]); 
 
   const handleChange = (e) => {
     setNewTask({ ...newTask, [e.target.name]: e.target.value });
@@ -33,7 +33,7 @@ const Footer = ({ filters }) => {
   const handleAddTask = () => {
     if (!newTask.title.trim()) return;
     
-    console.log("Adding task:", newTask); // Debugging log
+    console.log("Adding task:", newTask); 
     
     dispatch(addTask(newTask));
   
