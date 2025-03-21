@@ -1,10 +1,13 @@
+import { useDispatch } from "react-redux";
+import { setSearchQuery } from "../store/taskSlice";
 import { useState } from "react";
 
-const Header = ({ onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+const Header = () => {
+  const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState(""); 
 
   const handleSearch = () => {
-    onSearch(searchQuery.trim()); 
+    dispatch(setSearchQuery(inputValue.trim())); 
   };
 
   return (
@@ -16,10 +19,12 @@ const Header = ({ onSearch }) => {
             type="text"
             className="form-control"
             placeholder="Search tasks..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)} 
           />
-          <button className="btn btn-light" onClick={handleSearch}>🔍 Search</button>
+          <button className="btn btn-light" onClick={handleSearch}>
+            🔍 Search
+          </button>
         </div>
       </div>
     </div>

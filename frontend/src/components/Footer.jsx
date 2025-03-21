@@ -1,82 +1,85 @@
-
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addTask, deleteTask, clearTasks, updateTask } from "../store/taskSlice";
 import TaskCard from "./Taskcard";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useState } from "react";
 
-const Footer = () => {
-  const [tasks, setTasks] = useState([]);
+const Footer = ({ filters }) => {
+  const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.tasks.tasks);
+  const searchQuery = useSelector((state) => state.tasks.searchQuery); 
+  const [filteredTasks, setFilteredTasks] = useState(tasks);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({ title: "", description: "", dueDate: "", priority: "Medium", status: "Pending" });
 
-  // Handle Input Change
+  useEffect(() => {
+    let tempTasks = tasks;
+
+    
+    if (filters.status) tempTasks = tempTasks.filter((x) => x.status === filters.status);
+    if (filters.priority) tempTasks = tempTasks.filter((x) => x.priority === filters.priority);
+
+    // Apply search
+    if (searchQuery.trim()) {
+      tempTasks = tempTasks.filter((task) => task.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+
+    setFilteredTasks(tempTasks);
+  }, [filters, tasks, searchQuery]); 
+
   const handleChange = (e) => {
     setNewTask({ ...newTask, [e.target.name]: e.target.value });
   };
 
-  // Add New Task (Add to Beginning)
-  const addTask = () => {
+  const handleAddTask = () => {
     if (!newTask.title.trim()) return;
-    setTasks([newTask, ...tasks]); // Now tasks will appear at the top
+    dispatch(addTask(newTask));
     setNewTask({ title: "", description: "", dueDate: "", priority: "Medium", status: "Pending" });
-  };
-
-  // Delete Task
-  const deleteTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  };
-
-  // Update Task
-  const updateTask = (updatedTask, index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index] = updatedTask;
-    setTasks(updatedTasks);
+    setIsModalOpen(false);
   };
 
   return (
-    <div className="container mt-4">
-      {/* 🔹 Task List (Rendered Above Input Section) */}
-      <div className="mt-4">
-        {tasks.length > 0 ? (
-          tasks.map((task, index) => (
-            <TaskCard key={index} task={task} onDelete={() => deleteTask(index)} onUpdate={(updatedTask) => updateTask(updatedTask, index)} />
+    <div className="container mt-4 ">
+      {/* Task List */}
+      <div className="mt-4 d-flex flex-wrap justify-content-center gap-3 ">
+        {filteredTasks.length > 0 ? (
+          filteredTasks.map((task, index) => (
+            <TaskCard key={index} task={task} onDelete={() => dispatch(deleteTask(index))} onUpdate={(updatedTask) => dispatch(updateTask({ index, updatedTask }))} />
           ))
         ) : (
           <p className="text-muted text-center mt-3">No tasks found...</p>
         )}
       </div>
 
-      {/* 🔹 Task Input Section (Below Task List) */}
-      <div className="card shadow-lg p-4 mt-3">
-        <h2 className="text-center text-primary mb-3">📋 Task Manager</h2>
-        <div className="row g-3">
-          <div className="col-md-6">
-            <input type="text" name="title" className="form-control" placeholder="Task Title" value={newTask.title} onChange={handleChange} />
-          </div>
-          <div className="col-md-6">
-            <input type="text" name="description" className="form-control" placeholder="Task Description" value={newTask.description} onChange={handleChange} />
-          </div>
-          <div className="col-md-4">
-            <input type="date" name="dueDate" className="form-control" value={newTask.dueDate} onChange={handleChange} />
-          </div>
-          <div className="col-md-4">
-            <select name="priority" className="form-select" value={newTask.priority} onChange={handleChange}>
+      {/* Footer Buttons */}
+      <div className="d-flex justify-content-center gap-3 mt-4 bg-primary p-4 rounded-4">
+        <button className="btn btn-light px-4" onClick={() => setIsModalOpen(true)}>➕ Add Task</button>
+        <button className="btn btn-danger px-4" onClick={() => dispatch(clearTasks())}>🗑️ Delete All</button>
+      </div>
+
+      {/* Task Form Modal */}
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="modal-window" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-center text-primary mb-3">📋 Add New Task</h2>
+            <input type="text" name="title" className="form-control mb-2" placeholder="Task Title" value={newTask.title} onChange={handleChange} />
+            <textarea name="description" className="form-control mb-2" placeholder="Task Description" value={newTask.description} onChange={handleChange} />
+            <input type="date" name="dueDate" className="form-control mb-2" value={newTask.dueDate} onChange={handleChange} />
+            <select name="priority" className="form-select mb-2" value={newTask.priority} onChange={handleChange}>
               <option value="Low">🟢 Low</option>
               <option value="Medium">🟡 Medium</option>
               <option value="High">🔴 High</option>
             </select>
-          </div>
-          <div className="col-md-4">
-            <select name="status" className="form-select" value={newTask.status} onChange={handleChange}>
+            <select name="status" className="form-select mb-2" value={newTask.status} onChange={handleChange}>
               <option value="Pending">⏳ Pending</option>
               <option value="In Progress">⚒️ In Progress</option>
               <option value="Completed">✅ Completed</option>
             </select>
+            <div className="d-flex justify-content-end gap-2 mt-2">
+              <button className="btn btn-success" onClick={handleAddTask}>✅ Save Task</button>
+              <button className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>❌ Cancel</button>
+            </div>
           </div>
         </div>
-        <button className="btn btn-primary w-100 mt-3" onClick={addTask}>➕ Add Task</button>
-      </div>
-
-      {tasks.length > 0 && (
-        <button className="btn btn-danger w-100 mt-3" onClick={() => setTasks([])}>🗑️ Delete All</button>
       )}
     </div>
   );

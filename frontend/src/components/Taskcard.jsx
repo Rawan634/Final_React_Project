@@ -4,13 +4,12 @@ const TaskCard = ({ task, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState({ ...task });
 
-  // Handle input changes for inline editing
   const handleEditChange = (e) => {
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className="card shadow-sm mb-3">
+    <div className="card shadow-sm mb-3 task-card">
       <div className="card-body">
         {isEditing ? (
           <>
