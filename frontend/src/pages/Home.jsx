@@ -8,20 +8,20 @@ const Home = () => {
   const [priority, setPriority] = useState('');
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        {/* Sidebar */}
-        <div className="col-12 col-md-2 bg-dark text-white position-sticky top-0 vh-100">
-          <Sidebar status={status} setStatus={setStatus} priority={priority} setPriority={setPriority} />
-        </div>
-
-        {/* Main Content */}
-        <div className="col-12 col-md-10 d-flex flex-column min-vh-100">
-          <Header />
-          <Footer filters={{ priority, status }} />
-        </div>
+    <div className="container-fluid vh-100">
+    <div className="row h-100">
+      {/* Sidebar */}
+      <div className="col-12 col-md-2 bg-dark text-white position-sticky top-0 vh-100">
+        <Sidebar status={status} setStatus={setStatus} priority={priority} setPriority={setPriority} />
+      </div>
+  
+      {/* Main Content */}
+      <div className="col-12 col-md-10 d-flex flex-column vh-100">
+        <Header />
+        <Footer filters={{ priority, status }} />
       </div>
     </div>
+  </div>
   );
 };
 

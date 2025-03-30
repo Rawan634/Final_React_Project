@@ -13,31 +13,44 @@ const Footer = ({ filters }) => {
 
   useEffect(() => {
     let tempTasks = tasks;
-
-    // Apply filters
-    if (filters.status) tempTasks = tempTasks.filter((x) => x.status === filters.status);
-    if (filters.priority) tempTasks = tempTasks.filter((x) => x.priority === filters.priority);
-
+  
+    // Apply status filter
+    if (filters.status) {
+      tempTasks = tempTasks.filter((x) => x.status === filters.status);
+    }
+  
+    // Apply priority filter
+    if (filters.priority) {
+      tempTasks = tempTasks.filter((x) => x.priority === filters.priority);
+    }
+  
     // Apply search filter
     if (searchQuery.trim()) {
-      tempTasks = tempTasks.filter((task) => task.title.toLowerCase().includes(searchQuery.toLowerCase()));
+      tempTasks = tempTasks.filter((task) =>
+        task.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
-
+  
     setFilteredTasks(tempTasks);
-  }, [filters, tasks, searchQuery]); 
-
+  }, [filters, tasks, searchQuery]);
+  
   const handleChange = (e) => {
     setNewTask({ ...newTask, [e.target.name]: e.target.value });
   };
 
   const handleAddTask = () => {
-    if (!newTask.title.trim()) return;
-    
-    console.log("Adding task:", newTask); 
-    
-    dispatch(addTask(newTask));
+    if (!newTask.title.trim()) return; 
   
-    setNewTask({ title: "", description: "", dueDate: "", priority: "Medium", status: "Pending" });
+    dispatch(addTask(newTask)); 
+  
+    setNewTask({
+      title: "",
+      description: "",
+      dueDate: "",
+      priority: "",
+      status: "" 
+    });
+  
     setIsModalOpen(false);
   };
   
@@ -45,7 +58,7 @@ const Footer = ({ filters }) => {
   return (
     <div className="container mt-4">
       {/* Task List */}
-      <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
+      <div className="task-list-container d-flex flex-wrap justify-content-center gap-3 flex-grow-1" tabindex="0">
         {filteredTasks.length > 0 ? (
           filteredTasks.map((task, index) => (
             <TaskCard key={index} task={task} onDelete={() => dispatch(deleteTask(index))} onUpdate={(updatedTask) => dispatch(updateTask({ index, updatedTask }))} />
@@ -56,7 +69,8 @@ const Footer = ({ filters }) => {
       </div>
 
       {/* Footer Buttons */}
-      <div className="d-flex justify-content-center gap-3 mt-4 bg-primary text-white p-4 rounded-4 header">
+      <div className="d-flex justify-content-center gap-3 mt-4 text-white p-4 rounded-4 header"
+      style={{ backgroundColor: "#212529"}}>
         <button className="btn btn-light px-4" onClick={() => setIsModalOpen(true)}>➕ Add Task</button>
         <button className="btn btn-danger px-4" onClick={() => dispatch(clearTasks())}>🗑️ Delete All</button>
       </div>
