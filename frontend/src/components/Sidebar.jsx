@@ -1,4 +1,3 @@
-import logo from "../assets/Logo.png";
 import { FaListUl, FaClock, FaTasks, FaCheckCircle, FaExclamationTriangle, FaExclamationCircle, FaArrowDown } from "react-icons/fa";
 
 const Sidebar = ({ status, setStatus, priority, setPriority }) => {
@@ -12,17 +11,8 @@ const Sidebar = ({ status, setStatus, priority, setPriority }) => {
   }
 
   return (
-    <div className="p-3 vh-100 d-flex flex-column align-items-center text-white">
-      {/* Logo */}
-      <div className="text-center mb-4">
-        <img
-          src={logo}
-          alt="Logo"
-          className="rounded-circle"
-          style={{ width: "100px", height: "100px", objectFit: "cover" }}
-        />
-      </div>
-
+    <div className="p-3 vh-100 d-flex flex-column align-items-center text-white justify-content-center">
+      
       {/* Filters Section */}
       <div className="w-100">
         <h5 className="text-center mb-4 fs-4 fw-bold">Filters</h5>
@@ -57,6 +47,7 @@ const Sidebar = ({ status, setStatus, priority, setPriority }) => {
           </button>
         </div>
       </div>
+
     </div>
   );
 };

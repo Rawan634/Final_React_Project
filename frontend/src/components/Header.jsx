@@ -20,7 +20,7 @@ const Header = () => {
   };
 
   return (
-    <div className="text-white p-4 rounded-4 header" style={{ backgroundColor: "#212529"}}>
+    <div className="text-white p-3 rounded-4 header" style={{ backgroundColor: "#212529"}}>
       <div className="d-flex justify-content-between align-items-center">
         <h4>Task Manager</h4>
         <div className="d-flex gap-2">
