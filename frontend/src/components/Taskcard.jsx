@@ -37,11 +37,16 @@ const TaskCard = ({ task, onDelete, onUpdate }) => {
             <h5 className="fw-semibold d-flex align-items-center">
               <FaClipboardList className="me-2 text-primary" /> {task.title}
             </h5>
-            <p className="text-muted mb-1">
+            <p className="text-muted mb-2">
               <FaRegClock className="me-2 text-secondary" /> <strong>Due:</strong> {task.dueDate || "No due date"}
             </p>
-            <p className="card-text">{task.description}</p>
-            <p className="text-muted mb-1">
+            
+            {/* Scrollable description */}
+            <div style={{ maxHeight: '100px', overflowY: 'auto', marginBottom: '0.5rem' }}>
+              <p className="card-text">{task.description}</p>
+            </div>
+
+            <p className="text-muted mb-2">
               <FaFlag className="me-2 text-danger" /> <strong>Priority:</strong> {task.priority}
             </p>
             <p className="text-muted">
