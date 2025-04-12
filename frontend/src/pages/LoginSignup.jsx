@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login, signup } from "../api/auth"; // Make sure this path is correct
+import { login, signup } from "../api/auth";
 
 const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,8 +26,15 @@ const LoginSignup = () => {
     e.preventDefault();
     try {
       if (isLogin) {
-        const res = await login(formData);
+        const res = await login({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        console.log("Received token:", res.data.token);
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
         navigate("/home");
       } else {
         await signup(formData);
@@ -38,7 +45,6 @@ const LoginSignup = () => {
       setError(err.response?.data?.msg || "Something went wrong");
     }
   };
-  
 
   return (
     <div className="login-signup-container">
