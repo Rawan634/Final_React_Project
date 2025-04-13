@@ -19,7 +19,7 @@ const Header = () => {
   };
 
   return (
-    <div className="text-white p-3 rounded-4 header" style={{ backgroundColor: "#212529"}}>
+    <div className="text-white p-4 rounded-4 header" style={{ backgroundColor: "#212529"}}>
       <div className="d-flex justify-content-between align-items-center">
         <h4 className="d-flex align-items-center">
           <FaTasks className="me-2" /> Task Manager </h4>
@@ -32,7 +32,7 @@ const Header = () => {
             onChange={handleInputChange} 
           />
           <button className="btn btn-light" onClick={handleSearch}>
-            🔍 Search
+            🔍
           </button>
         </div>
       </div>

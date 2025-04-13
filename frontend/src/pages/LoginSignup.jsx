@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, signup } from "../api/auth";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 
 const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -30,11 +31,8 @@ const LoginSignup = () => {
           email: formData.email,
           password: formData.password,
         });
-
-        console.log("Received token:", res.data.token);
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-
         navigate("/home");
       } else {
         await signup(formData);
@@ -47,41 +45,54 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="login-signup-container">
-      <h2>{isLogin ? "Login" : "Sign Up"}</h2>
-      <form onSubmit={handleSubmit} className="form">
-        {!isLogin && (
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        )}
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        {error && <p className="error">{error}</p>}
-        <button type="submit">{isLogin ? "Login" : "Sign Up"}</button>
-      </form>
-      <p onClick={toggleForm} className="toggle-link">
-        {isLogin ? "Don't have an account? Sign up here" : "Already have an account? Login"}
-      </p>
+    <div className="login-container">
+      <div className="login-card">
+        <h2>{isLogin ? "Login" : "Sign Up"}</h2>
+        <form onSubmit={handleSubmit}>
+          {!isLogin && (
+            <div className="input-group">
+              <FaUser />
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+          <div className="input-group">
+            <FaEnvelope />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <FaLock />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="submit-btn">
+            {isLogin ? "Login" : "Sign Up"}
+          </button>
+        </form>
+        <p onClick={toggleForm} className="switch-link">
+          {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
+        </p>
+      </div>
     </div>
   );
 };

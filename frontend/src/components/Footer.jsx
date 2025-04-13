@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import TaskCard from "./Taskcard";
 import { useEffect, useState } from "react";
-import { FaSpinner } from "react-icons/fa";
+import {FaSpinner, FaExclamationTriangle,FaSadTear} from "react-icons/fa";
 import {
   addTaskToDB,
   deleteTaskFromDB,
@@ -103,25 +103,35 @@ const Footer = ({ filters }) => {
     <div className="task-section">
       {/* Scrollable Tasks */}
       <div className="task-list-scrollable d-flex flex-wrap justify-content-center gap-3">
-        {loading ? (
-          <p className="text-muted text-center mt-3">Loading tasks...</p>
-        ) : error ? (
-          <p className="text-danger text-center mt-3">{error}</p>
-        ) : filteredTasks.length > 0 ? (
-          filteredTasks.map((task) => (
-            <TaskCard
-              key={task._id}
-              task={task}
-              onDelete={() => dispatch(deleteTaskFromDB(task._id))}
-              onUpdate={(updatedTask) => 
-                dispatch(updateTaskInDB({ taskId: task._id, updatedTask }))
-              }
-            />
-          ))
-        ) : (
-          <p className="text-muted text-center mt-3">No tasks found...</p>
-        )}
-      </div>
+  {loading ? (
+    <div className="text-center w-100 mt-5">
+      <FaSpinner className="fa-spin text-primary" size={40} />
+      <p className="mt-2 text-muted">Loading tasks...</p>
+    </div>
+  ) : error ? (
+    <div className="text-center w-100 mt-5">
+      <FaExclamationTriangle className="text-danger" size={40} />
+      <p className="mt-2 text-danger">{error}</p>
+    </div>
+  ) : filteredTasks.length > 0 ? (
+    filteredTasks.map((task) => (
+      <TaskCard
+        key={task._id}
+        task={task}
+        onDelete={() => dispatch(deleteTaskFromDB(task._id))}
+        onUpdate={(updatedTask) =>
+          dispatch(updateTaskInDB({ taskId: task._id, updatedTask }))
+        }
+      />
+    ))
+  ) : (
+    <div className="text-center w-100 mt-5">
+      <FaSadTear className="text-secondary" size={40} />
+      <p className="mt-2 text-muted">No tasks found...</p>
+    </div>
+  )}
+</div>
+
 
       {/* Footer */}
       <div className="d-flex justify-content-center gap-3 rounded-4 footer">
