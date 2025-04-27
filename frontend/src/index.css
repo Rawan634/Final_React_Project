@@ -21,6 +21,7 @@ html, body {
 }
 
 body {
+  background-color: transparent;
   min-width: 320px;
   display: flex;
   flex-direction: column;
@@ -121,15 +122,10 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+    background-color: transparent; /* <--- make it transparent too */
   }
 }
+
 
 .modal-overlay {
   position: fixed;
@@ -254,3 +250,192 @@ button:focus-visible {
   text-align: center;
 }
 
+.animated-card {
+  animation: fadeInUp 0.8s ease forwards;
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin-bottom: 2rem;
+}
+
+.input-group input::placeholder {
+  color: #999;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: #333;
+}
+
+.login-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  overflow: hidden; /* <--- keep it, but... */
+}
+
+
+.parallax-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+}
+
+.login-card h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 2.2rem;
+  color: #222;
+}
+
+.subtitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #666;
+  font-size: 1rem;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: #f1f3f5;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.input-group svg {
+  margin-right: 10px;
+  color: #888;
+}
+
+.input-group input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #333;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.input-group:hover {
+  background-color: #e2e6ea;
+}
+
+.password-group {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.toggle-password:hover {
+  color: #333;
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.switch-link {
+  margin-top: 1rem;
+  color: #666;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.switch-link:hover {
+  color: #333;
+}
+
+/* Success Message */
+.success-message {
+  color: #28a745;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.success-message svg {
+  color: #28a745;
+}
+
+/* Error Message */
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.error-message svg {
+  color: #e74c3c;
+}
+/* Fade-in animation */
+.animated-card {
+  animation: fadeInUp 0.8s ease forwards;
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.login-card > * {
+  position: relative;
+  z-index: 1;
+}

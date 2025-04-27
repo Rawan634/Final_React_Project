@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, signup } from "../api/auth";
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaUserPlus, FaSignInAlt } from "react-icons/fa";
+import { MdOutlineLogin, MdOutlineAppRegistration } from "react-icons/md";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai"; // Icons for success and error
 
 const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,12 +14,16 @@ const LoginSignup = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); // New state for success message
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
     setError("");
+    setSuccess(""); // Reset success message when toggling
     setFormData({ username: "", email: "", password: "" });
+    setShowPassword(false);
   };
 
   const handleChange = (e) => {
@@ -36,18 +43,38 @@ const LoginSignup = () => {
         navigate("/home");
       } else {
         await signup(formData);
-        setError("Signup successful! Please login.");
+        setSuccess("Signup successful! Please login.");
         setIsLogin(true);
+        setError(""); // Clear any previous errors on success
       }
     } catch (err) {
       setError(err.response?.data?.msg || "Something went wrong");
+      setSuccess(""); // Clear success message if there's an error
+      // Hide the error message after 3 seconds
+      setTimeout(() => {
+        setError("");
+      }, 3000);
     }
   };
 
   return (
     <div className="login-container">
-      <div className="login-card">
-        <h2>{isLogin ? "Login" : "Sign Up"}</h2>
+      <div className="login-card animated-card parallax-card">
+        <h2>
+          {isLogin ? (
+            <>
+              <MdOutlineLogin size={28} style={{ marginBottom: "-5px" }} /> Login
+            </>
+          ) : (
+            <>
+              <MdOutlineAppRegistration size={28} style={{ marginBottom: "-5px" }} /> Sign Up
+            </>
+          )}
+        </h2>
+        <p className="subtitle">
+          {isLogin ? "Welcome back! Please login." : "Create a new account."}
+        </p>
+
         <form onSubmit={handleSubmit}>
           {!isLogin && (
             <div className="input-group">
@@ -73,24 +100,67 @@ const LoginSignup = () => {
               required
             />
           </div>
-          <div className="input-group">
+          <div className="input-group password-group">
             <FaLock />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
               required
             />
+            <span
+              className="toggle-password"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </span>
           </div>
-          {error && <p className="error-message">{error}</p>}
+
+          {/* Conditionally render error or success message */}
+          {(error || success) && (
+            <div className="message-container">
+              {error && (
+                <p className="error-message">
+                  <AiOutlineCloseCircle size={20} style={{ marginRight: "8px" }} />
+                  {error}
+                </p>
+              )}
+              {success && (
+                <p className="success-message">
+                  <AiOutlineCheckCircle size={20} style={{ marginRight: "8px" }} />
+                  {success}
+                </p>
+              )}
+            </div>
+          )}
+
           <button type="submit" className="submit-btn">
-            {isLogin ? "Login" : "Sign Up"}
+            {isLogin ? (
+              <>
+                <FaSignInAlt style={{ marginRight: "8px" }} /> Login
+              </>
+            ) : (
+              <>
+                <FaUserPlus style={{ marginRight: "8px" }} /> Sign Up
+              </>
+            )}
           </button>
         </form>
+
         <p onClick={toggleForm} className="switch-link">
-          {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
+          {isLogin ? (
+            <>
+              <FaUserPlus style={{ marginRight: "6px" }} />
+              Don't have an account? <strong>Sign Up</strong>
+            </>
+          ) : (
+            <>
+              <FaSignInAlt style={{ marginRight: "6px" }} />
+              Already have an account? <strong>Login</strong>
+            </>
+          )}
         </p>
       </div>
     </div>
