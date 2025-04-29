@@ -1,27 +1,26 @@
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+import TaskBoard from "../components/TaskBoard";
 import { useState } from "react";
 
 const Home = () => {
-  const [status, setStatus] = useState('');
   const [priority, setPriority] = useState('');
 
   return (
     <div className="container-fluid vh-100">
-    <div className="row h-100">
-      {/* Sidebar */}
-      <div className="col-12 col-md-2 bg-dark text-white position-sticky top-0 vh-100">
-        <Sidebar status={status} setStatus={setStatus} priority={priority} setPriority={setPriority} />
-      </div>
-  
-      {/* Main Content */}
-      <div className="col-12 col-md-10 d-flex flex-column vh-100">
-        <Header />
-        <Footer filters={{ priority, status }} />
+      <div className="row h-100">
+        {/* Sidebar */}
+        <div className="col-md-2 bg-dark text-white vh-100">
+          <Sidebar priority={priority} setPriority={setPriority} />
+        </div>
+        
+        {/* Main Content */}
+        <div className="col-md-10 d-flex flex-column vh-100 p-0">
+          <Header />
+          <TaskBoard priorityFilter={priority} />
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

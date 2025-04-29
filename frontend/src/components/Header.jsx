@@ -1,4 +1,4 @@
-import { FaTasks } from "react-icons/fa"; 
+import { FaTasks } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setSearchQuery } from "../store/taskSlice";
 import { useState } from "react";
@@ -19,20 +19,26 @@ const Header = () => {
   };
 
   return (
-    <div className="text-white p-4 rounded-4 header" style={{ backgroundColor: "#212529"}}>
+    <div className="header p-3 bg-dark text-white shadow-sm">
       <div className="d-flex justify-content-between align-items-center">
-        <h4 className="d-flex align-items-center">
-          <FaTasks className="me-2" /> Task Manager </h4>
-        <div className="d-flex gap-2">
+        <h4 className="d-flex align-items-center m-0">
+          <FaTasks className="me-2" /> TaskFlow
+        </h4>
+        <div className="d-flex gap-2 w-50">
           <input
             type="text"
-            className="form-control"
+            className="form-control form-control-sm"
             placeholder="Search tasks..."
             value={inputValue}
-            onChange={handleInputChange} 
+            onChange={handleInputChange}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
-          <button className="btn btn-light" onClick={handleSearch}>
-            🔍
+          <button 
+            className="btn btn-sm btn-light d-flex align-items-center"
+            onClick={handleSearch}
+          >
+            <span className="d-none d-sm-inline">Search</span>
+            <span className="d-sm-none">🔍</span>
           </button>
         </div>
       </div>
