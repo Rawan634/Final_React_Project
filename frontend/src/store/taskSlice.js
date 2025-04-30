@@ -139,8 +139,13 @@ const taskSlice = createSlice({
         }
       })
       .addCase(updateTaskInDB.fulfilled, (state, action) => {
-        // No need to update again as we did it optimistically
+        const updatedTask = action.payload.response;
+        const index = state.tasks.findIndex(t => t._id === updatedTask._id);
+        if (index !== -1) {
+          state.tasks[index] = updatedTask; // ✅ Now updates the task in state
+        }
       })
+      
       .addCase(updateTaskInDB.rejected, (state, action) => {
         const { originalTask } = action.payload;
         const index = state.tasks.findIndex(t => t._id === originalTask._id);

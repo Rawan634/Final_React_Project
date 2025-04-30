@@ -37,13 +37,14 @@ const TaskCard = ({ task, onDragStart }) => {  // Add onDragStart to props
         taskId: task._id, 
         updatedTask: editedTask 
       })).unwrap();
-      setIsEditing(false);
     } catch (err) {
       console.error("Update failed:", err);
     } finally {
       setIsSaving(false);
+      setIsEditing(false); 
     }
   };
+  
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this task?")) {
