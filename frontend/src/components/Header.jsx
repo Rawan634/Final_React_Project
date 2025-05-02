@@ -1,48 +1,42 @@
 import { FaTasks } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setSearchQuery } from "../store/taskSlice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Header = () => {
   const dispatch = useDispatch();
-  const [inputValue, setInputValue] = useState(""); 
+  const [inputValue, setInputValue] = useState("");
 
-  const handleSearch = () => {
-    dispatch(setSearchQuery(inputValue.trim())); 
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value); 
-    if (e.target.value === "") {
-      dispatch(setSearchQuery(""));
-    }
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      dispatch(setSearchQuery(inputValue.trim()));
+    }, 300); 
+    
+    return () => clearTimeout(timer);
+  }, [inputValue, dispatch]);
 
   return (
-    <div className="header p-3 bg-dark text-white shadow-sm">
-      <div className="d-flex justify-content-between align-items-center">
-        <h4 className="d-flex align-items-center m-0">
-          <FaTasks className="me-2" /> TaskFlow
-        </h4>
-        <div className="d-flex gap-2 w-50">
-          <input
-            type="text"
-            className="form-control form-control-sm"
-            placeholder="Search tasks..."
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
-          <button 
-            className="btn btn-sm btn-light d-flex align-items-center"
-            onClick={handleSearch}
-          >
-            <span className="d-none d-sm-inline">Search</span>
-            <span className="d-sm-none">🔍</span>
-          </button>
+    <header className="app-header">
+      <div className="header-content">
+        <div className="logo-container">
+          <FaTasks className="logo-icon" />
+          <h1 className="logo-text">TaskFlow</h1>
+        </div>
+        
+        <div className="search-container">
+          <div className="search-input-wrapper">
+            <span className="search-icon">🔍</span>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search tasks..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

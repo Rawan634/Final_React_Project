@@ -12,7 +12,7 @@ const TaskBoard = ({ priorityFilter }) => {
   const searchQuery = useSelector((state) => state.tasks.searchQuery);
   const [draggedTask, setDraggedTask] = useState(null);
 
-  // Fetch tasks on component mount
+  // Fetch tasks on component 
   useEffect(() => {
     dispatch(fetchTasksFromDB());
   }, [dispatch]);
@@ -35,7 +35,6 @@ const TaskBoard = ({ priorityFilter }) => {
   };
 
   const handleTaskUpdate = (taskId, updatedTask) => {
-    // This will trigger the optimistic update
     dispatch(updateTaskInDB({
       taskId,
       updatedTask,
@@ -81,7 +80,7 @@ const TaskBoard = ({ priorityFilter }) => {
           onDragOver={handleDragOver}
           onDrop={() => handleDrop("Pending")}
         >
-          <div className="column-header bg-secondary text-white p-2 rounded-top">
+          <div className="column-header pending text-black p-3 rounded-top">
             <h5 className="m-0">⏳ Pending ({pendingTasks.length})</h5>
           </div>
           <div className="column-content p-2 bg-light rounded-bottom h-100">
@@ -95,7 +94,7 @@ const TaskBoard = ({ priorityFilter }) => {
                 />
               ))
             ) : (
-              <div className="text-center text-muted p-3">No pending tasks</div>
+              <div className="text-center text-muted p-3"><FaSadTear /><p>No pending tasks</p></div>
             )}
           </div>
         </div>
@@ -106,7 +105,7 @@ const TaskBoard = ({ priorityFilter }) => {
           onDragOver={handleDragOver}
           onDrop={() => handleDrop("In Progress")}
         >
-          <div className="column-header bg-info text-white p-2 rounded-top">
+          <div className="column-header in-progress text-black p-3 rounded-top">
             <h5 className="m-0">⚒️ In Progress ({inProgressTasks.length})</h5>
           </div>
           <div className="column-content p-2 bg-light rounded-bottom h-100">
@@ -120,7 +119,7 @@ const TaskBoard = ({ priorityFilter }) => {
                 />
               ))
             ) : (
-              <div className="text-center text-muted p-3">No tasks in progress</div>
+              <div className="text-center text-muted p-3"><FaSadTear /><p>No tasks in progress</p></div>
             )}
           </div>
         </div>
@@ -131,7 +130,7 @@ const TaskBoard = ({ priorityFilter }) => {
           onDragOver={handleDragOver}
           onDrop={() => handleDrop("Completed")}
         >
-          <div className="column-header bg-success text-white p-2 rounded-top">
+          <div className="column-header completed text-black p-3 rounded-top">
             <h5 className="m-0">✅ Completed ({completedTasks.length})</h5>
           </div>
           <div className="column-content p-2 bg-light rounded-bottom h-100">
@@ -145,7 +144,7 @@ const TaskBoard = ({ priorityFilter }) => {
                 />
               ))
             ) : (
-              <div className="text-center text-muted p-3">No completed tasks</div>
+              <div className="text-center text-muted p-3"><FaSadTear /><p>No completed tasks</p></div>
             )}
           </div>
         </div>

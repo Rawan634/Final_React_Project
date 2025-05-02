@@ -74,7 +74,7 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     setSearchQuery: (state, action) => {
-      state.searchQuery = action.payload;
+      state.searchQuery = action.payload.toLowerCase(); 
     },
     addTaskOptimistically: (state, action) => {
       state.tasks.push(action.payload);

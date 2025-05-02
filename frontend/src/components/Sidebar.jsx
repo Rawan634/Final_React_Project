@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import AppLogo from "../assets/Logo.jpeg"
 import { 
   FaPlus, 
   FaTrash, 
   FaExclamationTriangle, 
   FaExclamationCircle, 
   FaArrowDown,
-  FaSpinner
+  FaSpinner,
+  FaTasks
 } from "react-icons/fa";
 import { addTaskOptimistically, addTaskToDB, clearTasksFromDB } from "../store/taskSlice";
 
 const Sidebar = ({ priority, setPriority }) => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -44,13 +47,9 @@ const Sidebar = ({ priority, setPriority }) => {
       const tempId = Date.now().toString();
       const tempTask = { ...newTask, _id: tempId };
       
-      // Optimistic update
       dispatch(addTaskOptimistically(tempTask));
-      
-      // API call with tempId
       await dispatch(addTaskToDB({ ...newTask, tempId })).unwrap();
       
-      // Reset form
       setNewTask({
         title: "",
         description: "",
@@ -67,11 +66,10 @@ const Sidebar = ({ priority, setPriority }) => {
   };
 
   const handleDeleteAll = async () => {
-    if (!window.confirm("Are you sure you want to delete ALL tasks?")) return;
-
     setIsDeleting(true);
     try {
       await dispatch(clearTasksFromDB()).unwrap();
+      setIsDeleteModalOpen(false);
     } catch (err) {
       setWarning(err.message || "Failed to delete tasks");
     } finally {
@@ -81,27 +79,32 @@ const Sidebar = ({ priority, setPriority }) => {
 
   return (
     <div className="p-3 vh-100 d-flex flex-column">
+      {/* Logo Section */}
+      <div className="text-center mb-4">
+      <div className="sidebar-logo"><img src={AppLogo} alt="App Logo" /></div>
+      </div>
+
       {/* Priority Section */}
       <div className="mb-auto">
-        <h5 className="text-center mb-4 fs-4 fw-bold">Priority</h5>
+        <h5 className="text-center mb-4 fs-4 fw-bold">Priority Levels</h5>
         <div className="d-flex flex-column gap-2">
           <button 
-            className={`btn btn-outline-danger fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'High' ? 'bg-danger text-white' : ''}`} 
+            className={`btn btn-outline-danger fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'High' ? 'bg-danger' : ''}`} 
             onClick={() => togglePriority('High')}
           >
-            <FaExclamationTriangle /> <span>High</span>
+            <FaExclamationTriangle /> <span className="text-white">High</span>
           </button>
           <button 
-            className={`btn btn-outline-warning fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'Medium' ? 'bg-warning text-white' : ''}`} 
+            className={`btn btn-outline-warning fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'Medium' ? 'bg-warning' : ''}`} 
             onClick={() => togglePriority('Medium')}
           >
-            <FaExclamationCircle /> <span>Medium</span>
+            <FaExclamationCircle /> <span className="text-white">Medium</span>
           </button>
           <button 
-            className={`btn btn-outline-success fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'Low' ? 'bg-success text-white' : ''}`} 
+            className={`btn btn-outline-success fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'Low' ? 'bg-success' : ''}`} 
             onClick={() => togglePriority('Low')}
           >
-            <FaArrowDown /> <span>Low</span>
+            <FaArrowDown /> <span className="text-white">Low</span>
           </button>
         </div>
       </div>
@@ -117,14 +120,14 @@ const Sidebar = ({ priority, setPriority }) => {
         </button>
         <button 
           className="btn btn-outline-danger d-flex align-items-center gap-2 justify-content-center"
-          onClick={handleDeleteAll}
+          onClick={() => setIsDeleteModalOpen(true)}
           disabled={isDeleting}
         >
           {isDeleting ? <FaSpinner className="fa-spin" /> : <><FaTrash /> Delete All</>}
         </button>
       </div>
 
-      {/* Task Form Modal */}
+      {/* Add Task Modal */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-window" onClick={(e) => e.stopPropagation()}>
@@ -194,6 +197,39 @@ const Sidebar = ({ priority, setPriority }) => {
               >
                 ❌ Cancel
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="delete-confirm-overlay">
+          <div className="delete-confirm-modal">
+            <div className="delete-confirm-content">
+              <h4 className="text-danger">Confirm Deletion</h4>
+              <p>Are you sure you want to delete ALL tasks? This action cannot be undone.</p>
+              <div className="delete-confirm-actions">
+                <button 
+                  className="btn btn-outline-secondary"
+                  onClick={() => setIsDeleteModalOpen(false)}
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="btn btn-danger"
+                  onClick={handleDeleteAll}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <FaSpinner className="fa-spin me-2" />
+                  ) : (
+                    <FaTrash className="me-2" />
+                  )}
+                  Delete All
+                </button>
+              </div>
             </div>
           </div>
         </div>
