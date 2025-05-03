@@ -46,7 +46,6 @@ const Sidebar = ({ priority, setPriority }) => {
     try {
       const tempId = Date.now().toString();
       const tempTask = { ...newTask, _id: tempId };
-      
       dispatch(addTaskOptimistically(tempTask));
       await dispatch(addTaskToDB({ ...newTask, tempId })).unwrap();
       
@@ -59,6 +58,7 @@ const Sidebar = ({ priority, setPriority }) => {
       });
       setIsModalOpen(false);
     } catch (err) {
+      dispatch(removeTaskTemporarily(tempId));
       setWarning(err.message || "Failed to add task");
     } finally {
       setIsSubmitting(false);
@@ -86,22 +86,22 @@ const Sidebar = ({ priority, setPriority }) => {
 
       {/* Priority Section */}
       <div className="mb-auto">
-        <h5 className="text-center mb-4 fs-4 fw-bold">Priority Levels</h5>
+        <h5 className="text-center mb-4 fs-5 fw-bold">Priority Levels</h5>
         <div className="d-flex flex-column gap-2">
           <button 
-            className={`btn btn-outline-danger fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'High' ? 'bg-danger' : ''}`} 
+            className={`btn btn-outline-danger fs-6 d-flex align-items-center gap-2 mb-2 ${priority === 'High' ? 'bg-danger' : ''}`} 
             onClick={() => togglePriority('High')}
           >
             <FaExclamationTriangle /> <span className="text-white">High</span>
           </button>
           <button 
-            className={`btn btn-outline-warning fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'Medium' ? 'bg-warning' : ''}`} 
+            className={`btn btn-outline-warning fs-6 d-flex align-items-center gap-2 mb-2 ${priority === 'Medium' ? 'bg-warning' : ''}`} 
             onClick={() => togglePriority('Medium')}
           >
             <FaExclamationCircle /> <span className="text-white">Medium</span>
           </button>
           <button 
-            className={`btn btn-outline-success fs-5 d-flex align-items-center gap-2 mb-2 ${priority === 'Low' ? 'bg-success' : ''}`} 
+            className={`btn btn-outline-success fs-6 d-flex align-items-center gap-2 mb-2 ${priority === 'Low' ? 'bg-success' : ''}`} 
             onClick={() => togglePriority('Low')}
           >
             <FaArrowDown /> <span className="text-white">Low</span>
@@ -112,6 +112,7 @@ const Sidebar = ({ priority, setPriority }) => {
       {/* Action Buttons */}
       <div className="mt-auto d-flex flex-column gap-2">
         <button 
+          style={{ fontSize: '15px' }}
           className="btn btn-primary d-flex align-items-center gap-2 justify-content-center"
           onClick={() => setIsModalOpen(true)}
           disabled={isSubmitting}
@@ -119,6 +120,7 @@ const Sidebar = ({ priority, setPriority }) => {
           {isSubmitting ? <FaSpinner className="fa-spin" /> : <><FaPlus /> Add Task</>}
         </button>
         <button 
+          style={{ fontSize: '15px' }}
           className="btn btn-outline-danger d-flex align-items-center gap-2 justify-content-center"
           onClick={() => setIsDeleteModalOpen(true)}
           disabled={isDeleting}

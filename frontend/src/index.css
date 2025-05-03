@@ -33,7 +33,7 @@ body {
 }
 
 .col-md-2 {
-  background: linear-gradient(135deg, #4a3ce1 0%, black 50%);
+  background: linear-gradient(135deg, black 60%, #FEF9F3 180%);
   color: white;
   height: 100vh;
   padding: 1rem;
@@ -42,8 +42,8 @@ body {
 }
 /* Logo Styles */
 .sidebar-logo {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   margin-bottom: 1rem;
   border-radius: 50%;
   overflow: hidden; /* clip overflow */
@@ -677,7 +677,7 @@ body {
 
 /* Header Styles */
 .app-header {
-  background: linear-gradient(135deg, black 0%, #4a3ce1 100%);
+  background: linear-gradient(135deg, black 0%, #FFFAF4 150%);
   color: white;
   padding: 18px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -780,7 +780,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #4a3ce1 0%, black 100%);
+  background: linear-gradient(135deg, black 30%, #FEF9F3 160%);
   padding: 2rem;
 }
 

@@ -35,12 +35,12 @@ export const addTaskToDB = createAsyncThunk(
 
 export const updateTaskInDB = createAsyncThunk(
   "tasks/update",
-  async ({ taskId, updatedTask, originalTask }, { rejectWithValue }) => {
+  async ({ taskId, updatedTask }, { rejectWithValue }) => { 
     try {
       const response = await api.updateTask(taskId, updatedTask);
-      return { response: response.data, originalTask };
+      return response.data; 
     } catch (err) {
-      return rejectWithValue({ error: err.response.data, originalTask });
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -77,7 +77,9 @@ const taskSlice = createSlice({
       state.searchQuery = action.payload.toLowerCase(); 
     },
     addTaskOptimistically: (state, action) => {
-      state.tasks.push(action.payload);
+      if (!state.tasks.some(task => task._id === action.payload._id)) {
+        state.tasks.push(action.payload);
+      }
     },
     removeTaskTemporarily: (state, action) => {
       state.tasks = state.tasks.filter(task => task._id !== action.payload);
@@ -112,18 +114,13 @@ const taskSlice = createSlice({
       
       // Add Task
       .addCase(addTaskToDB.pending, (state, action) => {
-        const tempTask = {
-          ...action.meta.arg,
-          _id: action.meta.arg.tempId,
-          isOptimistic: true
-        };
-        state.tasks.push(tempTask);
+        
       })
       .addCase(addTaskToDB.fulfilled, (state, action) => {
-        const index = state.tasks.findIndex(task => task._id === action.meta.arg.tempId);
-        if (index !== -1) {
-          state.tasks[index] = action.payload;
-        }
+        state.tasks = state.tasks.filter(task => 
+          task._id !== action.meta.arg.tempId || !task.isOptimistic
+        );
+        state.tasks.push(action.payload);
       })
       .addCase(addTaskToDB.rejected, (state, action) => {
         state.tasks = state.tasks.filter(task => task._id !== action.meta.arg.tempId);
@@ -135,23 +132,29 @@ const taskSlice = createSlice({
         const { taskId, updatedTask } = action.meta.arg;
         const index = state.tasks.findIndex(t => t._id === taskId);
         if (index !== -1) {
-          state.tasks[index] = { ...state.tasks[index], ...updatedTask };
+          state.tasks[index] = { 
+            ...state.tasks[index], 
+            ...updatedTask,
+            isOptimistic: true 
+          };
         }
       })
       .addCase(updateTaskInDB.fulfilled, (state, action) => {
-        const updatedTask = action.payload.response;
+        const updatedTask = action.payload;
         const index = state.tasks.findIndex(t => t._id === updatedTask._id);
         if (index !== -1) {
-          state.tasks[index] = updatedTask; // ✅ Now updates the task in state
+          state.tasks[index] = updatedTask;
         }
       })
       
       .addCase(updateTaskInDB.rejected, (state, action) => {
-        const { originalTask } = action.payload;
-        const index = state.tasks.findIndex(t => t._id === originalTask._id);
-        if (index !== -1) {
-          state.tasks[index] = originalTask;
+        const { taskId } = action.meta.arg;
+        const failedTask = state.tasks.find(t => t._id === taskId);
+        
+        if (failedTask?.isOptimistic) {
+          state.tasks = state.tasks.filter(t => t._id !== taskId || !t.isOptimistic);
         }
+        state.error = action.payload?.msg || "Failed to update task";
       })
       
       // Delete Task
@@ -159,8 +162,6 @@ const taskSlice = createSlice({
         state.tasks = state.tasks.filter(task => task._id !== action.meta.arg);
       })
       .addCase(deleteTaskFromDB.rejected, (state, action) => {
-        // If you need to re-add the task on failure, you would do it here
-        // But you'll need the original task data to do this properly
       })
       
       // Clear Tasks
