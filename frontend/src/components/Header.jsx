@@ -20,7 +20,7 @@ const Header = () => {
       <div className="header-content">
         <div className="logo-container">
           <FaTasks className="logo-icon" />
-          <h1 className="logo-text fs-5">TaskFlow</h1>
+          <h1 className="logo-text fs-5">Taskly</h1>
         </div>
         
         <div className="search-container">
