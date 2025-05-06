@@ -114,7 +114,12 @@ const taskSlice = createSlice({
       
       // Add Task
       .addCase(addTaskToDB.pending, (state, action) => {
-        
+        const tempTask = {
+          ...action.meta.arg,
+          _id: action.meta.arg.tempId || `temp-${Date.now()}`,
+          isOptimistic: true
+        };
+        state.tasks.push(tempTask);
       })
       .addCase(addTaskToDB.fulfilled, (state, action) => {
         state.tasks = state.tasks.filter(task => 

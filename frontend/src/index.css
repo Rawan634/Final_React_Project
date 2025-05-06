@@ -672,7 +672,7 @@ body {
 
 /* Header Styles */
 .app-header {
-  background: linear-gradient(135deg, black 0%, #A88C6F 150%);
+  background: linear-gradient(135deg, black 0%, #4f4030 150%);
   color: white;
   padding: 18px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -775,7 +775,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, black 30%, #A88C6F 160%);
+  background: linear-gradient(135deg, black 30%, #4f4030 160%);
   padding: 2rem;
 }
 
@@ -941,3 +941,232 @@ body {
   }
 }
 
+/* === Calendar Button Enhancements === */
+.calendar-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  color: #007bff; /* Blue icon */
+}
+
+.calendar-button:hover {
+  color: #0056b3;
+}
+
+.calendar-button-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: #007bff;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+/* === Modal Overlay === */
+.calendar-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 30, 30, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+/* === Modal Content Box === */
+.calendar-modal {
+  background: #ffffff;
+  color: #000000; /* Black text for visibility */
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === Modal Header === */
+.calendar-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+  background: #f8f9fa;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.calendar-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.calendar-close-button {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+}
+
+.calendar-close-button:hover {
+  color: #e74c3c;
+}
+
+/* === Calendar === */
+.calendar-container {
+  padding: 1rem 1.5rem;
+}
+
+.custom-calendar {
+  width: 100%;
+  border: none;
+}
+
+/* Override current date highlight */
+.react-calendar__tile--now {
+  background: #e0f0ff !important; /* Light blue */
+  font-weight: bold;
+  color: #000 !important;
+  border-radius: 8px;
+}
+
+/* Selected day */
+.react-calendar__tile--active {
+  background: #007bff !important;
+  color: white !important;
+  border-radius: 8px;
+}
+
+/* Task preview in tile */
+.calendar-task {
+  font-size: 0.6rem;
+  background: #e6f0ea;
+  margin: 1px 0;
+  padding: 2px 4px;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #000;
+}
+
+.calendar-task.low {
+  background-color: #d4edda;
+}
+
+.calendar-task.medium {
+  background-color: #ffeeba;
+}
+
+.calendar-task.high {
+  background-color: #f8d7da;
+}
+
+.calendar-more-tasks {
+  font-size: 0.6rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* === Task List in Modal === */
+.calendar-task-list {
+  padding: 1rem 1.5rem;
+  background-color: #fdfdfd;
+  border-top: 1px solid #eee;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.task-list-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.calendar-task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f1f1f1;
+  margin-bottom: 6px;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-title {
+  font-weight: 500;
+}
+
+.task-status {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.task-priority {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+.task-priority.low {
+  background: #e0f7e9;
+  color: #28a745;
+}
+
+.task-priority.medium {
+  background: #fff3cd;
+  color: #ffc107;
+}
+
+.task-priority.high {
+  background: #f8d7da;
+  color: #dc3545;
+}
+
+/* === Empty State === */
+.no-tasks {
+  text-align: center;
+  color: #777;
+  padding: 1rem 0;
+}
+
+.no-tasks-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* === Animation === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
