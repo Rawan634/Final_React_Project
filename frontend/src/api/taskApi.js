@@ -16,3 +16,5 @@ export const createTask = (taskData) => API.post("/add", taskData);
 export const updateTask = (taskId, updatedTask) => API.put(`/${taskId}`, updatedTask);
 export const deleteTask = (taskId) => API.delete(`/${taskId}`);
 export const clearTasks = () => API.delete("/");
+export const addToFavorites = (taskId) => API.put(`/${taskId}/favorite`);
+export const removeFromFavorites = (taskId) => API.put(`/${taskId}/unfavorite`);

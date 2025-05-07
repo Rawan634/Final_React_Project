@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
 import TaskCard from './Taskcard';
-import { FaSpinner, FaExclamationTriangle, FaSadTear } from "react-icons/fa";
+import { FaSpinner, FaExclamationTriangle, FaSadTear, FaStar } from "react-icons/fa";
 import { useEffect, useState } from 'react';
 import { fetchTasksFromDB, updateTaskInDB } from '../store/taskSlice';
 
-const TaskBoard = ({ priorityFilter }) => {
+const TaskBoard = ({ priorityFilter, favoritesFilter }) => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.tasks);
   const loading = useSelector((state) => state.tasks.loading);
@@ -17,12 +17,13 @@ const TaskBoard = ({ priorityFilter }) => {
     dispatch(fetchTasksFromDB());
   }, [dispatch]);
 
-  // Filter tasks based on priority and search
+  // Filter tasks based on priority, favorites, and search
   const filteredTasks = tasks.filter(task => {
     const matchesPriority = priorityFilter ? task.priority === priorityFilter : true;
+    const matchesFavorites = favoritesFilter ? task.favorite === true : true;
     const matchesSearch = searchQuery ? 
       task.title.toLowerCase().includes(searchQuery.toLowerCase()) : true;
-    return matchesPriority && matchesSearch;
+    return matchesPriority && matchesSearch && matchesFavorites;
   });
 
   // Categorize tasks by status
@@ -73,6 +74,23 @@ const TaskBoard = ({ priorityFilter }) => {
 
   return (
     <div className="task-board-container p-3 flex-grow-1 d-flex flex-column">
+      {/* Filter Indicator */}
+      {(priorityFilter || favoritesFilter) && (
+        <div className="filter-indicator mb-3 p-2 d-flex align-items-center">
+          <span className="me-2">Active Filters:</span>
+          {priorityFilter && (
+            <span className={`filter-badge priority-${priorityFilter.toLowerCase()}`}>
+              {priorityFilter} Priority
+            </span>
+          )}
+          {favoritesFilter && (
+            <span className="filter-badge favorites">
+              <FaStar className="me-1" /> Favorites Only
+            </span>
+          )}
+        </div>
+      )}
+      
       <div className="kanban-board flex-grow-1 d-flex gap-3 overflow-auto">
         {/* Pending Column */}
         <div 

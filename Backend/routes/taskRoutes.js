@@ -104,4 +104,42 @@ router.delete("/", authMiddleware, async (req, res) => {
     }
   });
 
+// ⭐ Add Task to Favorites
+router.put("/:taskId/favorite", authMiddleware, async (req, res) => {
+  const { taskId } = req.params;
+
+  try {
+    const user = await User.findById(req.userId);
+    const task = user.tasks.id(taskId);
+
+    if (!task) return res.status(404).json({ msg: "Task not found" });
+
+    task.favorite = true;
+
+    await user.save();
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+});
+
+// 🔄 Remove Task from Favorites
+router.put("/:taskId/unfavorite", authMiddleware, async (req, res) => {
+  const { taskId } = req.params;
+
+  try {
+    const user = await User.findById(req.userId);
+    const task = user.tasks.id(taskId);
+
+    if (!task) return res.status(404).json({ msg: "Task not found" });
+
+    task.favorite = false;
+
+    await user.save();
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+});
+
 module.exports = router;

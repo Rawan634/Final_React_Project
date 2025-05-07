@@ -377,6 +377,31 @@ body {
   gap: 0.5rem;
 }
 
+.btn-favorite {
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-favorite:hover {
+  color: #ffc107;
+  transform: scale(1.1);
+}
+
+.btn-favorite.active {
+  color: #ffc107;
+}
+
+.favorite-icon {
+  font-size: 1.1rem;
+}
+
 .task-card[data-status="Pending"] { border-left-color: #6c757d; }
 .task-card[data-status="In Progress"] { border-left-color: #17a2b8; }
 .task-card[data-status="Completed"] { border-left-color: #28a745; }
@@ -939,5 +964,52 @@ body {
   .auth-header h2 {
     font-size: 1.5rem;
   }
+}
+
+/* Filter Styles */
+.filter-indicator {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.filter-badge.priority-high {
+  background-color: #ffecec;
+  color: #dc3545;
+  border: 1px solid #ffcdcd;
+}
+
+.filter-badge.priority-medium {
+  background-color: #fff8e6;
+  color: #e6a700;
+  border: 1px solid #ffe8a1;
+}
+
+.filter-badge.priority-low {
+  background-color: #e8f7ee;
+  color: #28a745;
+  border: 1px solid #b8e0c8;
+}
+
+.filter-badge.favorites {
+  background-color: #fff8dc;
+  color: #ffc107;
+  border: 1px solid #ffe8a1;
+  display: inline-flex;
+  align-items: center;
 }
 

@@ -8,11 +8,12 @@ import {
   FaExclamationCircle, 
   FaArrowDown,
   FaSpinner,
-  FaTasks
+  FaTasks,
+  FaStar
 } from "react-icons/fa";
 import { addTaskOptimistically, addTaskToDB, clearTasksFromDB } from "../store/taskSlice";
 
-const Sidebar = ({ priority, setPriority }) => {
+const Sidebar = ({ priority, setPriority, showFavorites, setShowFavorites }) => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -29,6 +30,18 @@ const Sidebar = ({ priority, setPriority }) => {
 
   const togglePriority = (newPriority) => {
     setPriority(newPriority === priority ? '' : newPriority);
+    // When selecting a priority, disable favorites filter
+    if (newPriority !== priority) {
+      setShowFavorites(false);
+    }
+  };
+
+  const toggleFavorites = () => {
+    // When toggling favorites, clear priority filter
+    if (!showFavorites) {
+      setPriority('');
+    }
+    setShowFavorites(!showFavorites);
   };
 
   const handleChange = (e) => {
@@ -85,7 +98,7 @@ const Sidebar = ({ priority, setPriority }) => {
       </div>
 
       {/* Priority Section */}
-      <div className="mb-auto">
+      <div className="mb-4">
         <h5 className="text-center mb-4 fs-5 fw-bold">Priority Levels</h5>
         <div className="d-flex flex-column gap-2">
           <button 
@@ -107,6 +120,17 @@ const Sidebar = ({ priority, setPriority }) => {
             <FaArrowDown /> <span className="text-white">Low</span>
           </button>
         </div>
+      </div>
+
+      {/* Favorites Filter Section */}
+      <div className="mb-auto">
+        <h5 className="text-center mb-4 fs-5 fw-bold">Filter</h5>
+        <button 
+          className={`btn btn-outline-warning fs-6 d-flex align-items-center gap-2 mb-2 ${showFavorites ? 'bg-warning' : ''}`} 
+          onClick={toggleFavorites}
+        >
+          <FaStar /> <span className="text-white">Favorites</span>
+        </button>
       </div>
 
       {/* Action Buttons */}

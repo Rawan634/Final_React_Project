@@ -69,6 +69,30 @@ export const clearTasksFromDB = createAsyncThunk(
   }
 );
 
+export const addTaskToFavorites = createAsyncThunk(
+  "tasks/addToFavorites",
+  async (taskId, { rejectWithValue }) => {
+    try {
+      const response = await api.addToFavorites(taskId);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+export const removeTaskFromFavorites = createAsyncThunk(
+  "tasks/removeFromFavorites",
+  async (taskId, { rejectWithValue }) => {
+    try {
+      const response = await api.removeFromFavorites(taskId);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
@@ -167,6 +191,24 @@ const taskSlice = createSlice({
       // Clear Tasks
       .addCase(clearTasksFromDB.fulfilled, (state) => {
         state.tasks = [];
+      })
+      
+      // Add to Favorites
+      .addCase(addTaskToFavorites.fulfilled, (state, action) => {
+        const favoritedTask = action.payload;
+        const index = state.tasks.findIndex(t => t._id === favoritedTask._id);
+        if (index !== -1) {
+          state.tasks[index] = favoritedTask;
+        }
+      })
+      
+      // Remove from Favorites
+      .addCase(removeTaskFromFavorites.fulfilled, (state, action) => {
+        const unfavoritedTask = action.payload;
+        const index = state.tasks.findIndex(t => t._id === unfavoritedTask._id);
+        if (index !== -1) {
+          state.tasks[index] = unfavoritedTask;
+        }
       });
   }
 });

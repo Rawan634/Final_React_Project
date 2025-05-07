@@ -8,9 +8,11 @@ import {
   FaSpinner,
   FaCheck,
   FaTimes,
-  FaCheckCircle
+  FaCheckCircle,
+  FaStar,
+  FaRegStar
 } from "react-icons/fa";
-import { deleteTaskFromDB, updateTaskInDB } from "../store/taskSlice";
+import { deleteTaskFromDB, updateTaskInDB, addTaskToFavorites, removeTaskFromFavorites } from "../store/taskSlice";
 
 const TaskCard = ({ task, onDragStart }) => {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const TaskCard = ({ task, onDragStart }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
   const handleDragStart = (e) => {
     e.dataTransfer.setData('text/plain', task._id);
@@ -58,6 +61,21 @@ const TaskCard = ({ task, onDragStart }) => {
       console.error("Delete failed:", err);
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    setIsTogglingFavorite(true);
+    try {
+      if (task.favorite) {
+        await dispatch(removeTaskFromFavorites(task._id)).unwrap();
+      } else {
+        await dispatch(addTaskToFavorites(task._id)).unwrap();
+      }
+    } catch (err) {
+      console.error("Favorite toggle failed:", err);
+    } finally {
+      setIsTogglingFavorite(false);
     }
   };
 
@@ -227,18 +245,31 @@ const TaskCard = ({ task, onDragStart }) => {
                 {task.dueDate || "No due date"}
               </div>
               <div className="task-actions">
-          <button 
-            className="btn btn-edit"
-            onClick={() => setIsEditing(true)}
-          >
-            <FaEdit />
-          </button>
-          <button 
-            className="btn btn-delete"
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            <FaTrash />
-          </button>
+                <button 
+                  className={`btn btn-favorite ${task.favorite ? 'active' : ''}`}
+                  onClick={handleToggleFavorite}
+                  disabled={isTogglingFavorite}
+                >
+                  {isTogglingFavorite ? (
+                    <FaSpinner className="fa-spin" />
+                  ) : task.favorite ? (
+                    <FaStar className="favorite-icon" />
+                  ) : (
+                    <FaRegStar className="favorite-icon" />
+                  )}
+                </button>
+                <button 
+                  className="btn btn-edit"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <FaEdit />
+                </button>
+                <button 
+                  className="btn btn-delete"
+                  onClick={() => setShowDeleteConfirm(true)}
+                >
+                  <FaTrash />
+                </button>
               </div>
             </div>
           </>
