@@ -12,7 +12,7 @@ import {
   FaStar,
   FaRegStar
 } from "react-icons/fa";
-import { deleteTaskFromDB, updateTaskInDB, addTaskToFavorites, removeTaskFromFavorites } from "../store/taskSlice";
+import { deleteTaskFromDB, updateTaskInDB, addTaskToFavorites, removeTaskFromFavorites,updateTaskOptimistically } from "../store/taskSlice";
 
 const TaskCard = ({ task, onDragStart }) => {
   const dispatch = useDispatch();
@@ -36,19 +36,36 @@ const TaskCard = ({ task, onDragStart }) => {
 
   const handleSave = async () => {
     setIsSaving(true);
+    
     try {
-      await dispatch(updateTaskInDB({ 
-        taskId: task._id, 
-        updatedTask: editedTask 
+      // Validate task ID format
+      if (!task?._id || typeof task._id !== 'string') {
+        throw new Error("Invalid task ID");
+      }
+  
+      // Check if it's a temporary ID (numeric or prefixed)
+      if (/^(\d+|temp-)/.test(task._id)) {
+        throw new Error("Cannot save - please refresh to get valid task ID");
+      }
+  
+      const result = await dispatch(updateTaskInDB({
+        taskId: task._id,
+        updatedTask: editedTask,
+        originalTask: task // For rollback
       })).unwrap();
+  
+      console.log("Update successful:", result);
     } catch (err) {
-      console.error("Update failed:", err);
+      console.error("Update failed:", {
+        error: err.message,
+        taskId: task?._id,
+        taskStatus: task?.status
+      });
     } finally {
       setIsSaving(false);
-      setIsEditing(false); 
+      setIsEditing(false);
     }
   };
-  
   
   const handleDelete = async () => {
     setIsDeleting(true);

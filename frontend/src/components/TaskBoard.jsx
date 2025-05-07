@@ -18,13 +18,16 @@ const TaskBoard = ({ priorityFilter, favoritesFilter }) => {
   }, [dispatch]);
 
   // Filter tasks based on priority, favorites, and search
-  const filteredTasks = tasks.filter(task => {
-    const matchesPriority = priorityFilter ? task.priority === priorityFilter : true;
-    const matchesFavorites = favoritesFilter ? task.favorite === true : true;
-    const matchesSearch = searchQuery ? 
-      task.title.toLowerCase().includes(searchQuery.toLowerCase()) : true;
-    return matchesPriority && matchesSearch && matchesFavorites;
-  });
+  // In the filter function, add null checks:
+  // Update your filteredTasks calculation to include null checks:
+const filteredTasks = (tasks || []).filter(task => {
+  const matchesPriority = priorityFilter ? task?.priority === priorityFilter : true;
+  const matchesFavorites = favoritesFilter ? task?.favorite === true : true;
+  const matchesSearch = searchQuery ? 
+    (task?.title || '').toLowerCase().includes(searchQuery.toLowerCase()) : true;
+  
+  return matchesPriority && matchesFavorites && matchesSearch;
+});
 
   // Categorize tasks by status
   const pendingTasks = filteredTasks.filter(task => task.status === "Pending");
@@ -105,11 +108,11 @@ const TaskBoard = ({ priorityFilter, favoritesFilter }) => {
             {pendingTasks.length > 0 ? (
               pendingTasks.map(task => (
                 <TaskCard 
-                  key={task._id} 
-                  task={task} 
-                  onDragStart={handleDragStart}
-                  onUpdate={handleTaskUpdate}
-                />
+                key={task.isOptimistic ? `opt-${task._id}` : task._id}
+                task={task} 
+                onDragStart={handleDragStart}
+                onUpdate={handleTaskUpdate}
+              />
               ))
             ) : (
               <div className="text-center text-muted p-3"><FaSadTear /><p>No pending tasks</p></div>

@@ -697,7 +697,7 @@ body {
 
 /* Header Styles */
 .app-header {
-  background: linear-gradient(135deg, black 0%, #4f4030 150%);
+  background: linear-gradient(135deg, black 0%, #A88C6F 150%);
   color: white;
   padding: 18px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -800,7 +800,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, black 30%, #4f4030 160%);
+  background: linear-gradient(135deg, black 30%, #A88C6F 160%);
   padding: 2rem;
 }
 
@@ -964,6 +964,53 @@ body {
   .auth-header h2 {
     font-size: 1.5rem;
   }
+}
+
+/* Filter Styles */
+.filter-indicator {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.filter-badge.priority-high {
+  background-color: #ffecec;
+  color: #dc3545;
+  border: 1px solid #ffcdcd;
+}
+
+.filter-badge.priority-medium {
+  background-color: #fff8e6;
+  color: #e6a700;
+  border: 1px solid #ffe8a1;
+}
+
+.filter-badge.priority-low {
+  background-color: #e8f7ee;
+  color: #28a745;
+  border: 1px solid #b8e0c8;
+}
+
+.filter-badge.favorites {
+  background-color: #fff8dc;
+  color: #ffc107;
+  border: 1px solid #ffe8a1;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* === Calendar Button Enhancements === */

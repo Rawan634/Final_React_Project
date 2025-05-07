@@ -30,14 +30,12 @@ const Sidebar = ({ priority, setPriority, showFavorites, setShowFavorites }) => 
 
   const togglePriority = (newPriority) => {
     setPriority(newPriority === priority ? '' : newPriority);
-    // When selecting a priority, disable favorites filter
     if (newPriority !== priority) {
       setShowFavorites(false);
     }
   };
 
   const toggleFavorites = () => {
-    // When toggling favorites, clear priority filter
     if (!showFavorites) {
       setPriority('');
     }
@@ -124,9 +122,9 @@ const Sidebar = ({ priority, setPriority, showFavorites, setShowFavorites }) => 
 
       {/* Favorites Filter Section */}
       <div className="mb-auto">
-        <h5 className="text-center mb-4 fs-5 fw-bold">Filter</h5>
+        <h5 className="text-center mb-4 fs-5 fw-bold">Extra Filter</h5>
         <button 
-          className={`btn btn-outline-warning fs-6 d-flex align-items-center gap-2 mb-2 ${showFavorites ? 'bg-warning' : ''}`} 
+          className={`btn btn-outline-warning fs-6 d-flex w-100 align-items-center gap-2 mb-4 ${showFavorites ? 'bg-warning' : ''}`} 
           onClick={toggleFavorites}
         >
           <FaStar /> <span className="text-white">Favorites</span>

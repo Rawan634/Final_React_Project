@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const mongoose = require('mongoose'); // Add this line
 
 // Middleware to verify token and get user ID
 const authMiddleware = (req, res, next) => {
@@ -45,24 +46,31 @@ router.get("/", authMiddleware, async (req, res) => {
 // ✏️ Update Task
 router.put("/:taskId", authMiddleware, async (req, res) => {
   const { taskId } = req.params;
-  const { title, description, dueDate, priority, status } = req.body;
+  const updates = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(taskId)) {
+    return res.status(400).json({ msg: "Invalid task ID format" });
+  }
 
   try {
     const user = await User.findById(req.userId);
-    const task = user.tasks.id(taskId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
 
+    const task = user.tasks.id(taskId);
     if (!task) return res.status(404).json({ msg: "Task not found" });
 
-    task.title = title;
-    task.description = description;
-    task.dueDate = dueDate;
-    task.priority = priority;
-    task.status = status;
+    Object.keys(updates).forEach(key => {
+      if (key in task) task[key] = updates[key];
+    });
 
     await user.save();
-    res.json(user.tasks);
+    res.json(task);
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    console.error("Update error:", err);
+    res.status(500).json({ 
+      msg: "Server error",
+      error: err.message 
+    });
   }
 });
 

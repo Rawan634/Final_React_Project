@@ -25,8 +25,12 @@ export const addTaskToDB = createAsyncThunk(
   "tasks/add",
   async (task, { rejectWithValue }) => {
     try {
-      const response = await api.createTask(task);
-      return response.data;
+      // Generate a proper temporary ID
+      const tempId = `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const tempTask = { ...task, _id: tempId, isOptimistic: true };
+      
+      const response = await api.createTask(tempTask);
+      return { ...response.data, tempId }; // Pass both IDs
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -35,12 +39,23 @@ export const addTaskToDB = createAsyncThunk(
 
 export const updateTaskInDB = createAsyncThunk(
   "tasks/update",
-  async ({ taskId, updatedTask }, { rejectWithValue }) => { 
+  async ({ taskId, updatedTask, originalTask }, { rejectWithValue }) => { 
     try {
+      // Validate ID format before making the request
+      if (!taskId || typeof taskId !== 'string') {
+        throw new Error("Invalid task ID format");
+      }
+
       const response = await api.updateTask(taskId, updatedTask);
-      return response.data; 
+      return {
+        updatedTask: response.data,
+        originalTaskId: taskId // For fallback if update fails
+      };
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue({
+        msg: err.response?.data?.msg || "Failed to update task",
+        originalTask // For optimistic rollback
+      });
     }
   }
 );
@@ -68,7 +83,6 @@ export const clearTasksFromDB = createAsyncThunk(
     }
   }
 );
-
 export const addTaskToFavorites = createAsyncThunk(
   "tasks/addToFavorites",
   async (taskId, { rejectWithValue }) => {
@@ -76,7 +90,7 @@ export const addTaskToFavorites = createAsyncThunk(
       const response = await api.addToFavorites(taskId);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -88,7 +102,7 @@ export const removeTaskFromFavorites = createAsyncThunk(
       const response = await api.removeFromFavorites(taskId);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -138,18 +152,12 @@ const taskSlice = createSlice({
       
       // Add Task
       .addCase(addTaskToDB.pending, (state, action) => {
-        const tempTask = {
-          ...action.meta.arg,
-          _id: action.meta.arg.tempId || `temp-${Date.now()}`,
-          isOptimistic: true
-        };
-        state.tasks.push(tempTask);
+        
       })
       .addCase(addTaskToDB.fulfilled, (state, action) => {
-        state.tasks = state.tasks.filter(task => 
-          task._id !== action.meta.arg.tempId || !task.isOptimistic
-        );
-        state.tasks.push(action.payload);
+        const { tempId, ...realTask } = action.payload;
+        state.tasks = state.tasks.filter(task => task._id !== tempId);
+        state.tasks.push(realTask);
       })
       .addCase(addTaskToDB.rejected, (state, action) => {
         state.tasks = state.tasks.filter(task => task._id !== action.meta.arg.tempId);
@@ -160,32 +168,42 @@ const taskSlice = createSlice({
       .addCase(updateTaskInDB.pending, (state, action) => {
         const { taskId, updatedTask } = action.meta.arg;
         const index = state.tasks.findIndex(t => t._id === taskId);
+        
         if (index !== -1) {
-          state.tasks[index] = { 
-            ...state.tasks[index], 
+          // Store original task for potential rollback
+          state.tasks[index] = {
+            ...state.tasks[index],
             ...updatedTask,
-            isOptimistic: true 
+            _originalData: state.tasks[index], // Backup
+            isOptimistic: true
           };
         }
       })
       .addCase(updateTaskInDB.fulfilled, (state, action) => {
-        const updatedTask = action.payload;
+        const updatedTask = action.payload.updatedTask;
         const index = state.tasks.findIndex(t => t._id === updatedTask._id);
+        
         if (index !== -1) {
-          state.tasks[index] = updatedTask;
+          state.tasks[index] = {
+            ...state.tasks[index],
+            ...updatedTask,
+            isOptimistic: false
+          };
         }
+        state.loading = false;
       })
-      
       .addCase(updateTaskInDB.rejected, (state, action) => {
         const { taskId } = action.meta.arg;
-        const failedTask = state.tasks.find(t => t._id === taskId);
+        const error = action.payload;
         
-        if (failedTask?.isOptimistic) {
-          state.tasks = state.tasks.filter(t => t._id !== taskId || !t.isOptimistic);
+        // Revert to original task data
+        const index = state.tasks.findIndex(t => t._id === taskId);
+        if (index !== -1 && state.tasks[index]._originalData) {
+          state.tasks[index] = action.payload.originalTask;
         }
-        state.error = action.payload?.msg || "Failed to update task";
+        
+        state.error = error.msg;
       })
-      
       // Delete Task
       .addCase(deleteTaskFromDB.pending, (state, action) => {
         state.tasks = state.tasks.filter(task => task._id !== action.meta.arg);
