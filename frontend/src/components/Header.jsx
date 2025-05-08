@@ -13,6 +13,19 @@ const Header = () => {
   const tasks = useSelector((state) => state.tasks.tasks);
   const [tasksByDate, setTasksByDate] = useState({});
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+  
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    document.body.classList.remove(`${theme}-mode`);
+    document.body.classList.add(`${newTheme}-mode`);
+    localStorage.setItem("theme", newTheme);
+    setTheme(newTheme);
+  };
+  
+
   // Group tasks by date
   useEffect(() => {
     const groupedTasks = {};
@@ -66,11 +79,13 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="header-content">
+        {/* Logo */}
         <div className="logo-container">
           <FaTasks className="logo-icon" />
           <h1 className="logo-text fs-5">Taskly</h1>
         </div>
-        
+  
+        {/* Search Input */}
         <div className="search-container">
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
@@ -83,23 +98,34 @@ const Header = () => {
             />
           </div>
         </div>
-
-        {/* Enhanced Calendar Button */}
-        <div className="header-calendar-container">
+  
+        {/* Right-side controls */}
+        <div className="d-flex align-items-center">
+          {/* Calendar Button */}
+          <div className="header-calendar-container">
+            <button 
+              className="calendar-button active"
+              onClick={() => setIsCalendarOpen(true)}
+              aria-label="Open calendar"
+            >
+              <FaCalendarAlt size={20} />
+              <span className="calendar-button-badge">
+                {Object.keys(tasksByDate).length}
+              </span>
+            </button>
+          </div>
+  
+          {/* Theme Toggle Button */}
           <button 
-            className="calendar-button active"
-            onClick={() => setIsCalendarOpen(true)}
-            aria-label="Open calendar"
+            onClick={toggleTheme} 
+            className="btn btn-sm ms-3"
           >
-            <FaCalendarAlt size={20} />
-            <span className="calendar-button-badge">
-              {Object.keys(tasksByDate).length}
-            </span>
+            {theme === "light" ? "🌙" : "☀️"}
           </button>
         </div>
       </div>
-
-      {/* Enhanced Calendar Modal */}
+  
+      {/* Calendar Modal */}
       {isCalendarOpen && (
         <div className="calendar-modal-overlay" onClick={() => setIsCalendarOpen(false)}>
           <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
@@ -121,7 +147,7 @@ const Header = () => {
                 className="custom-calendar"
               />
             </div>
-
+  
             <div className="calendar-task-list">
               <h4 className="task-list-title">
                 Tasks for {selectedDate.toLocaleDateString('en-US', { 
@@ -158,6 +184,7 @@ const Header = () => {
       )}
     </header>
   );
+  
 };
 
 export default Header;

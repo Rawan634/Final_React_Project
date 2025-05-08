@@ -33,7 +33,7 @@ body {
 }
 
 .col-md-2 {
-  background: linear-gradient(135deg, black 60%, #A88C6F 150%);
+  background: #1E1E1E; 
   color: white;
   height: 100vh;
   padding: 1rem;
@@ -635,7 +635,7 @@ body {
 }
 
 .btn-danger {
-  background-color: #dc3545;
+  background-color: #e915c2;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -697,7 +697,7 @@ body {
 
 /* Header Styles */
 .app-header {
-  background: linear-gradient(135deg, black 0%, #A88C6F 150%);
+  background: #212529;
   color: white;
   padding: 18px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -800,7 +800,6 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, black 30%, #A88C6F 160%);
   padding: 2rem;
 }
 
@@ -1241,4 +1240,307 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* dark/light toggle */
+body.dark-mode {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+
+body.dark-mode .container-fluid,
+body.dark-mode .task-board-container,
+body.dark-mode .kanban-column,
+body.dark-mode .column-header,
+body.dark-mode .column-content,
+body.dark-mode .card-footer,
+body.dark-mode .task-card,
+body.dark-mode .calendar-modal,
+body.dark-mode .calendar-task-item {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border-color: #333 !important;
+}
+
+body.dark-mode .task-card .card-body {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+body.dark-mode .app-header,
+body.dark-mode .calendar-modal-header {
+  background-color: #2c2c2c;
+}
+
+body.dark-mode .search-input {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+body.dark-mode .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .column-header {
+  background-color: #2b2b2b;
+}
+
+body.dark-mode .calendar-task {
+  background-color: #333 !important;
+  color: #eee !important;
+}
+
+body.dark-mode .calendar-task.low {
+  background-color: #2a442a !important;
+}
+
+body.dark-mode .calendar-task.medium {
+  background-color: #4d4420 !important;
+}
+
+body.dark-mode .calendar-task.high {
+  background-color: #5c2a2a !important;
+}
+/* Column headers with status colors */
+body.dark-mode .column-header.pending {
+  border-color: #6c757d !important;
+}
+
+body.dark-mode .column-header.in-progress {
+  border-color: #17a2b8 !important;
+}
+
+body.dark-mode .column-header.completed {
+  border-color: #28a745 !important;
+}
+body.dark-mode .task-card[data-status="Pending"] {
+  border-left-color: #6c757d !important;
+}
+
+body.dark-mode .task-card[data-status="In Progress"] {
+  border-left-color: #17a2b8 !important;
+}
+
+body.dark-mode .task-card[data-status="Completed"] {
+  border-left-color: #28a745 !important;
+}
+body.dark-mode .task-actions button,
+body.dark-mode .btn-favorite {
+  color: #ffffff !important;
+}
+
+body.dark-mode .btn-favorite.active {
+  color: #ffc107 !important; /* Keep gold for active favorite */
+}
+body.dark-mode .btn-save {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+body.dark-mode .btn-cancel {
+  background-color: #333 !important;
+  color: #ffffff !important;
+  border: 1px solid #555 !important;
+}
+body.dark-mode .task-description,
+body.dark-mode .due-date {
+  color: #ffffff !important;
+}
+body.dark-mode .calendar-modal,
+body.dark-mode .calendar-modal-header,
+body.dark-mode .calendar-task-list,
+body.dark-mode .calendar-container {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+  border-color: #333 !important;
+}
+
+body.dark-mode .calendar-title,
+body.dark-mode .calendar-task-item,
+body.dark-mode .task-title,
+body.dark-mode .task-status,
+body.dark-mode .calendar-more-tasks {
+  color: #ffffff !important;
+}
+body.dark-mode .react-calendar__tile--active {
+  background: #007bff !important;
+  color: #ffffff !important;
+}
+body.dark-mode .filter-indicator {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+  color: #ffffff !important;
+}
+body.dark-mode .filter-badge.priority-high {
+  background-color: #4a1f1f !important;
+  color: #ff6b6b !important;
+  border-color: #ffb3b3 !important;
+}
+
+body.dark-mode .filter-badge.priority-medium {
+  background-color: #4d3b00 !important;
+  color: #ffcc00 !important;
+  border-color: #ffe680 !important;
+}
+
+body.dark-mode .filter-badge.priority-low {
+  background-color: #1f3a1f !important;
+  color: #8be78b !important;
+  border-color: #b8e0c8 !important;
+}
+
+body.dark-mode .filter-badge.favorites {
+  background-color: #3f2d00 !important;
+  color: #ffc107 !important;
+  border-color: #ffda6a !important;
+}
+/* === DARK MODE: Calendar Widget === */
+body.dark-mode .react-calendar {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: none;
+}
+
+body.dark-mode .react-calendar__month-view__weekdays {
+  background-color: #2a2a2a;
+  color: #dddddd;
+}
+
+body.dark-mode .react-calendar__tile {
+  background: transparent;
+  color: #ffffff;
+}
+
+body.dark-mode .react-calendar__tile:enabled:hover,
+body.dark-mode .react-calendar__tile--active {
+  background-color: #007bff !important;
+  color: #ffffff !important;
+  border-radius: 8px;
+}
+
+body.dark-mode .react-calendar__tile--now {
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border-radius: 8px;
+}
+/* === DARK MODE: Add Task Modal === */
+body.dark-mode .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .modal-window {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+body.dark-mode .form-control::placeholder {
+  color: #bbb;
+}
+/* === DARK MODE: Delete Confirm Modals === */
+body.dark-mode .delete-confirm-modal,
+body.dark-mode .delete-modal-content {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #333;
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .delete-confirm-content p,
+body.dark-mode .delete-modal-content p {
+  color: #dddddd;
+}
+
+body.dark-mode .btn-cancel,
+body.dark-mode .btn-danger {
+  background-color: #333;
+  color: #ffffff;
+  border: 1px solid #666;
+}
+
+body.dark-mode .btn-danger {
+  background-color: #dc3545;
+  border: none;
+}
+
+body.dark-mode .btn-danger:hover {
+  background-color: #c82333;
+}
+/* === DARK MODE: Calendar navigation === */
+body.dark-mode .react-calendar__navigation {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .react-calendar__navigation button {
+  color: #ffffff !important;
+  background: transparent;
+  border: none;
+}
+
+body.dark-mode .react-calendar__navigation button:enabled:hover {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+/* delte all and add task */
+/* General (light mode) */
+.btn-add-task {
+  background-color: transparent !important;
+  border: 2px solid #007bff !important;
+  color: #007bff !important;
+  transition: all 0.3s ease;
+}
+
+.btn-add-task:hover {
+  background-color: #007bff !important;
+  color: white !important;
+  transform: translateY(-1px);
+}
+
+.btn-add-task:active {
+  transform: translateY(0);
+}
+
+.btn-delete-all {
+  background-color: #dc3545 !important;
+  color: white !important;
+  border: none !important;
+  transition: all 0.3s ease;
+}
+
+.btn-delete-all:hover {
+  background-color: #c82333 !important;
+  transform: translateY(-1px);
+}
+
+.btn-delete-all:active {
+  transform: translateY(0);
+}
+
+/* Dark mode overrides (in case your theme changes it) */
+body.dark-mode .btn-add-task {
+  border-color: #007bff;
+  color: #007bff;
+  background-color: transparent;
+}
+
+body.dark-mode .btn-add-task:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+body.dark-mode .btn-delete-all {
+  background-color: #dc3545;
+  color: white;
+}
+
+body.dark-mode .btn-delete-all:hover {
+  background-color: #c82333;
 }

@@ -135,7 +135,7 @@ const Sidebar = ({ priority, setPriority, showFavorites, setShowFavorites }) => 
       <div className="mt-auto d-flex flex-column gap-2">
         <button 
           style={{ fontSize: '15px' }}
-          className="btn btn-primary d-flex align-items-center gap-2 justify-content-center"
+          className="btn btn-add-task d-flex align-items-center gap-2 justify-content-center"
           onClick={() => setIsModalOpen(true)}
           disabled={isSubmitting}
         >
@@ -143,7 +143,7 @@ const Sidebar = ({ priority, setPriority, showFavorites, setShowFavorites }) => 
         </button>
         <button 
           style={{ fontSize: '15px' }}
-          className="btn btn-outline-danger d-flex align-items-center gap-2 justify-content-center"
+          className="btn btn-delete-all d-flex align-items-center gap-2 justify-content-center"
           onClick={() => setIsDeleteModalOpen(true)}
           disabled={isDeleting}
         >
