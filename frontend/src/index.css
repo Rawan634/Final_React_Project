@@ -33,7 +33,7 @@ body {
 }
 
 .col-md-2 {
-  background: #1E1E1E; 
+  background: linear-gradient(45deg, #00244a 0%, #1E1E1E 50%);
   color: white;
   height: 100vh;
   padding: 1rem;
@@ -56,7 +56,7 @@ body {
 }
 
 .sidebar-logo img {
-  width: 135%;  /* Zoom into the image */
+  width: 110%;  /* Zoom into the image */
   height: auto;
 }
 
@@ -697,7 +697,7 @@ body {
 
 /* Header Styles */
 .app-header {
-  background: #212529;
+  background: linear-gradient(45deg, #1E1E1E 30%, #042344 100%);
   color: white;
   padding: 18px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { 
   FaEdit, 
@@ -25,45 +25,48 @@ const TaskCard = ({ task, onDragStart }) => {
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
-  const handleDragStart = (e) => {
-    e.dataTransfer.setData('text/plain', task._id);
-    if (onDragStart) onDragStart(task);
-  };
+// Update drag handling to ensure proper task data
+const handleDragStart = (e) => {
+  if (!task?._id || !isValidId(task._id)) {
+    e.preventDefault();
+    return;
+  }
+  
+  e.dataTransfer.setData('text/plain', task._id);
+  if (onDragStart) onDragStart(task);
+};
 
+  
   const handleEditChange = (e) => {
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
   };
+  const isValidId = (id) => {
+    return id && (typeof id === 'string' || typeof id === 'number') && 
+           (/^[0-9a-f]{24}$/.test(id) || 
+            /^temp-[0-9a-f]{24}$/.test(id) || 
+            /^\d+$/.test(id));
+  };
 
   const handleSave = async () => {
+    if (!isValidId(task._id)) {
+      alert("Task is not ready for editing yet");
+      return;
+    }
+  
     setIsSaving(true);
     
     try {
-      // Validate task ID format
-      if (!task?._id || typeof task._id !== 'string') {
-        throw new Error("Invalid task ID");
-      }
-  
-      // Check if it's a temporary ID (numeric or prefixed)
-      if (/^(\d+|temp-)/.test(task._id)) {
-        throw new Error("Cannot save - please refresh to get valid task ID");
-      }
-  
-      const result = await dispatch(updateTaskInDB({
+      await dispatch(updateTaskInDB({
         taskId: task._id,
         updatedTask: editedTask,
-        originalTask: task // For rollback
+        originalTask: task
       })).unwrap();
-  
-      console.log("Update successful:", result);
-    } catch (err) {
-      console.error("Update failed:", {
-        error: err.message,
-        taskId: task?._id,
-        taskStatus: task?.status
-      });
+      
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Update failed:", error);
     } finally {
       setIsSaving(false);
-      setIsEditing(false);
     }
   };
   

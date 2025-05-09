@@ -51,12 +51,22 @@ const filteredTasks = (tasks || []).filter(task => {
   };
 
   const handleDrop = async (status) => {
-    if (draggedTask && draggedTask.status !== status) {
+  if (draggedTask && draggedTask.status !== status) {
+    try {
       const updatedTask = { ...draggedTask, status };
-      handleTaskUpdate(draggedTask._id, updatedTask);
+      await dispatch(updateTaskInDB({
+        taskId: draggedTask._id,
+        updatedTask,
+        originalTask: draggedTask
+      })).unwrap();
+      
+    } catch (error) {
+      console.error("Drop failed:", error);
+    } finally {
+      setDraggedTask(null);
     }
-    setDraggedTask(null);
-  };
+  }
+};
   if (loading) {
     return (
       <div className="text-center w-100 mt-5">

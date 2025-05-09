@@ -21,14 +21,19 @@ const authMiddleware = (req, res, next) => {
 
 // ➕ Add Task
 router.post("/add", authMiddleware, async (req, res) => {
+  console.log('Backend received task:', {
+    receivedId: req.body._id,
+    body: req.body
+  });
   const { title, description, dueDate, priority, status } = req.body;
 
   try {
     const user = await User.findById(req.userId);
-    user.tasks.push({ title, description, dueDate, priority, status });
+    user.tasks.push({ _id: new mongoose.Types.ObjectId(), title, description, dueDate, priority, status });
     await user.save();
-    res.status(201).json(user.tasks);
-  } catch (err) {
+    const newTask = user.tasks[user.tasks.length - 1];
+    res.status(201).json(newTask);
+    } catch (err) {
     res.status(500).json({ msg: err.message });
   }
 });
@@ -44,33 +49,38 @@ router.get("/", authMiddleware, async (req, res) => {
 });
 
 // ✏️ Update Task
+// Update Task
 router.put("/:taskId", authMiddleware, async (req, res) => {
   const { taskId } = req.params;
-  const updates = req.body;
-
-  if (!mongoose.Types.ObjectId.isValid(taskId)) {
-    return res.status(400).json({ msg: "Invalid task ID format" });
+  
+  // Accept either MongoDB format or our temporary format
+  if (!/^([0-9a-f]{24}|temp-[0-9a-f]{24})$/.test(taskId)) {
+    return res.status(400).json({ 
+      msg: "Invalid ID format",
+      exampleValidId: new mongoose.Types.ObjectId() 
+    });
   }
 
   try {
     const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    const taskIndex = user.tasks.findIndex(t => 
+      t._id.toString() === taskId || t._id === taskId
+    );
 
-    const task = user.tasks.id(taskId);
-    if (!task) return res.status(404).json({ msg: "Task not found" });
+    if (taskIndex === -1) return res.status(404).json({ msg: "Task not found" });
 
-    Object.keys(updates).forEach(key => {
-      if (key in task) task[key] = updates[key];
+    // Update only allowed fields
+    const allowedUpdates = ['title', 'description', 'dueDate', 'priority', 'status'];
+    allowedUpdates.forEach(field => {
+      if (req.body[field] !== undefined) {
+        user.tasks[taskIndex][field] = req.body[field];
+      }
     });
 
     await user.save();
-    res.json(task);
+    res.json(user.tasks[taskIndex]);
   } catch (err) {
-    console.error("Update error:", err);
-    res.status(500).json({ 
-      msg: "Server error",
-      error: err.message 
-    });
+    res.status(500).json({ msg: err.message });
   }
 });
 

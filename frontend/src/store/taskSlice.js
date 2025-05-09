@@ -8,6 +8,7 @@ const initialState = {
   error: null,
 };
 
+
 // Async Thunks
 export const fetchTasksFromDB = createAsyncThunk(
   "tasks/fetchAll",
@@ -20,41 +21,47 @@ export const fetchTasksFromDB = createAsyncThunk(
     }
   }
 );
+const generateTempId = () => `temp-${[...Array(24)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`;
 
 export const addTaskToDB = createAsyncThunk(
   "tasks/add",
-  async (task, { rejectWithValue }) => {
+  async (task, { rejectWithValue, dispatch }) => {
     try {
-      // Generate a proper temporary ID
-      const tempId = `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const tempId = generateTempId();
       const tempTask = { ...task, _id: tempId, isOptimistic: true };
-      
-      const response = await api.createTask(tempTask);
-      return { ...response.data, tempId }; // Pass both IDs
+
+      // Optimistically add to state
+      dispatch(addTaskOptimistically(tempTask));
+
+      const response = await api.createTask(task); // Send without temp ID
+      return { ...response.data, tempId };
     } catch (err) {
+      // Remove the temporary task if creation fails
+      dispatch(removeTaskTemporarily(tempId));
       return rejectWithValue(err.response.data);
     }
   }
 );
 
+
 export const updateTaskInDB = createAsyncThunk(
   "tasks/update",
-  async ({ taskId, updatedTask, originalTask }, { rejectWithValue }) => { 
+  async ({ taskId, updatedTask }, { rejectWithValue, getState }) => {
     try {
-      // Validate ID format before making the request
-      if (!taskId || typeof taskId !== 'string') {
-        throw new Error("Invalid task ID format");
-      }
-
+      // Find the original task for rollback
+      const originalTask = getState().tasks.tasks.find(t => t._id === taskId);
+      
       const response = await api.updateTask(taskId, updatedTask);
       return {
         updatedTask: response.data,
-        originalTaskId: taskId // For fallback if update fails
+        originalTask
       };
     } catch (err) {
       return rejectWithValue({
-        msg: err.response?.data?.msg || "Failed to update task",
-        originalTask // For optimistic rollback
+        msg: err.response?.data?.msg || "Update failed",
+        error: err.message,
+        taskId,
+        updatedTask
       });
     }
   }
@@ -150,18 +157,22 @@ const taskSlice = createSlice({
         state.error = action.payload?.msg || "Failed to fetch tasks";
       })
       
-      // Add Task
-      .addCase(addTaskToDB.pending, (state, action) => {
-        
-      })
       .addCase(addTaskToDB.fulfilled, (state, action) => {
         const { tempId, ...realTask } = action.payload;
-        state.tasks = state.tasks.filter(task => task._id !== tempId);
-        state.tasks.push(realTask);
+        const index = state.tasks.findIndex(task => task._id === tempId);
+        
+        if (index !== -1) {
+          // Replace temporary task with real one
+          state.tasks[index] = realTask;
+        }
+        // Don't add again - we already have either the temp or real version
       })
+      
       .addCase(addTaskToDB.rejected, (state, action) => {
-        state.tasks = state.tasks.filter(task => task._id !== action.meta.arg.tempId);
-        state.error = action.payload?.msg || "Failed to add task";
+        // Remove the temporary task if creation failed
+        state.tasks = state.tasks.filter(
+          task => task._id !== action.meta.arg._id
+        );
       })
       
       // Update Task
@@ -170,39 +181,35 @@ const taskSlice = createSlice({
         const index = state.tasks.findIndex(t => t._id === taskId);
         
         if (index !== -1) {
-          // Store original task for potential rollback
           state.tasks[index] = {
             ...state.tasks[index],
             ...updatedTask,
-            _originalData: state.tasks[index], // Backup
-            isOptimistic: true
+            isUpdating: true
           };
         }
       })
+      // In your extraReducers, modify the updateTaskInDB.fulfilled case:
       .addCase(updateTaskInDB.fulfilled, (state, action) => {
-        const updatedTask = action.payload.updatedTask;
+        const { updatedTask } = action.payload;
         const index = state.tasks.findIndex(t => t._id === updatedTask._id);
         
         if (index !== -1) {
           state.tasks[index] = {
-            ...state.tasks[index],
             ...updatedTask,
-            isOptimistic: false
+            isUpdating: false
           };
+        } else {
+          // If task not found (shouldn't happen), add it
+          state.tasks.push(updatedTask);
         }
-        state.loading = false;
       })
       .addCase(updateTaskInDB.rejected, (state, action) => {
-        const { taskId } = action.meta.arg;
-        const error = action.payload;
-        
-        // Revert to original task data
+        const { taskId, originalTask } = action.payload;
         const index = state.tasks.findIndex(t => t._id === taskId);
-        if (index !== -1 && state.tasks[index]._originalData) {
-          state.tasks[index] = action.payload.originalTask;
-        }
         
-        state.error = error.msg;
+        if (index !== -1 && originalTask) {
+          state.tasks[index] = originalTask;
+        }
       })
       // Delete Task
       .addCase(deleteTaskFromDB.pending, (state, action) => {

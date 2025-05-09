@@ -11,9 +11,12 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+
 export const fetchTasks = () => API.get("/");
 export const createTask = (taskData) => API.post("/add", taskData);
-export const updateTask = (taskId, updatedTask) => API.put(`/${taskId}`, updatedTask);
+export const updateTask = (taskId, updatedTask) => {
+  return API.put(`/${taskId}`, updatedTask); 
+};
 export const deleteTask = (taskId) => API.delete(`/${taskId}`);
 export const clearTasks = () => API.delete("/");
 export const addToFavorites = (taskId) => API.put(`/${taskId}/favorite`);

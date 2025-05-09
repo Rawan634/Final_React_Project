@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import AppLogo from "../assets/Logo.jpeg"
+import AppLogo from "../assets/Taskly.png"
 import { 
   FaPlus, 
   FaTrash, 
@@ -52,13 +52,11 @@ const Sidebar = ({ priority, setPriority, showFavorites, setShowFavorites }) => 
       setWarning("Title is required!");
       return;
     }
-
+  
     setIsSubmitting(true);
     try {
-      const tempId = Date.now().toString();
-      const tempTask = { ...newTask, _id: tempId };
-      dispatch(addTaskOptimistically(tempTask));
-      await dispatch(addTaskToDB({ ...newTask, tempId })).unwrap();
+      // Don't add optimistically here - let taskSlice handle it
+      await dispatch(addTaskToDB(newTask)).unwrap();
       
       setNewTask({
         title: "",
@@ -69,13 +67,12 @@ const Sidebar = ({ priority, setPriority, showFavorites, setShowFavorites }) => 
       });
       setIsModalOpen(false);
     } catch (err) {
-      dispatch(removeTaskTemporarily(tempId));
       setWarning(err.message || "Failed to add task");
     } finally {
       setIsSubmitting(false);
     }
   };
-
+  
   const handleDeleteAll = async () => {
     setIsDeleting(true);
     try {
