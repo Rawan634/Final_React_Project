@@ -1544,3 +1544,14 @@ body.dark-mode .btn-delete-all {
 body.dark-mode .btn-delete-all:hover {
   background-color: #c82333;
 }
+/* === DARK MODE: Empty state or no-tasks message === */
+body.dark-mode .text-muted {
+  color: #ffffff !important;
+}
+
+body.dark-mode .text-center svg {
+  color: #ffffff !important;
+}
+body.dark-mode .sad-icon {
+  color: #ffffff;
+}
