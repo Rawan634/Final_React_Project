@@ -43,7 +43,7 @@ const Header = () => {
     setTasksByDate(groupedTasks);
   }, [tasks]);
 
-  // Search debounce
+  // Search 
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(setSearchQuery(inputValue.trim()));
@@ -52,7 +52,7 @@ const Header = () => {
     return () => clearTimeout(timer);
   }, [inputValue, dispatch]);
 
-  // Calendar tile content
+  // Calendar title
   const tileContent = ({ date, view }) => {
     if (view === 'month') {
       const dateKey = date.toDateString();
@@ -79,7 +79,6 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="header-content">
-        {/* Logo */}
         <div className="logo-container">
           <FaTasks className="logo-icon" />
           <h1 className="logo-text fs-5">Taskly</h1>
@@ -99,7 +98,6 @@ const Header = () => {
           </div>
         </div>
   
-        {/* Right-side controls */}
         <div className="d-flex align-items-center">
           {/* Calendar Button */}
           <div className="header-calendar-container">

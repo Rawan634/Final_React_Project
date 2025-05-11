@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const mongoose = require('mongoose'); // Add this line
+const mongoose = require('mongoose'); 
 
 // Middleware to verify token and get user ID
 const authMiddleware = (req, res, next) => {
@@ -19,7 +19,7 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// ➕ Add Task
+// Add Task
 router.post("/add", authMiddleware, async (req, res) => {
   console.log('Backend received task:', {
     receivedId: req.body._id,
@@ -38,7 +38,7 @@ router.post("/add", authMiddleware, async (req, res) => {
   }
 });
 
-// 📥 Get All Tasks
+// Get All Tasks
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
@@ -48,12 +48,10 @@ router.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-// ✏️ Update Task
 // Update Task
 router.put("/:taskId", authMiddleware, async (req, res) => {
   const { taskId } = req.params;
   
-  // Accept either MongoDB format or our temporary format
   if (!/^([0-9a-f]{24}|temp-[0-9a-f]{24})$/.test(taskId)) {
     return res.status(400).json({ 
       msg: "Invalid ID format",
@@ -69,7 +67,6 @@ router.put("/:taskId", authMiddleware, async (req, res) => {
 
     if (taskIndex === -1) return res.status(404).json({ msg: "Task not found" });
 
-    // Update only allowed fields
     const allowedUpdates = ['title', 'description', 'dueDate', 'priority', 'status'];
     allowedUpdates.forEach(field => {
       if (req.body[field] !== undefined) {
@@ -84,7 +81,7 @@ router.put("/:taskId", authMiddleware, async (req, res) => {
   }
 });
 
-// ❌ Delete Task
+// Delete Task
 router.delete("/:taskId", authMiddleware, async (req, res) => {
     const { taskId } = req.params;
   
@@ -110,7 +107,7 @@ router.delete("/:taskId", authMiddleware, async (req, res) => {
     }
   });
   
-// ➖ Delete All Tasks
+// Delete All Tasks
 router.delete("/", authMiddleware, async (req, res) => {
     try {
       const user = await User.findById(req.userId);
@@ -122,7 +119,7 @@ router.delete("/", authMiddleware, async (req, res) => {
     }
   });
 
-// ⭐ Add Task to Favorites
+// Add Task to Favorites
 router.put("/:taskId/favorite", authMiddleware, async (req, res) => {
   const { taskId } = req.params;
 
@@ -141,7 +138,7 @@ router.put("/:taskId/favorite", authMiddleware, async (req, res) => {
   }
 });
 
-// 🔄 Remove Task from Favorites
+// Remove Task from Favorites
 router.put("/:taskId/unfavorite", authMiddleware, async (req, res) => {
   const { taskId } = req.params;
 

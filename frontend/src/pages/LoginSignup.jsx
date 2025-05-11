@@ -50,7 +50,7 @@ const LoginSignup = () => {
         setSuccess("Signup successful! Please login.");
         setTimeout(() => {
           setSuccess("");
-        }, 2000); // Auto-dismiss after 2 seconds
+        }, 2000); 
         setIsLogin(true);
         setError("");
       }

@@ -34,7 +34,6 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
-    // Debugging: Log secret verification
     console.log("JWT_SECRET exists?", !!process.env.JWT_SECRET);
     
     const token = jwt.sign(
