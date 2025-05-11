@@ -1617,6 +1617,14 @@ body.dark-mode .undo-message {
   border: 1px solid #721c24;
 }
 
+body.dark-mode .text-muted {
+  color: #ffffff !important;
+}
+
+body.dark-mode .text-center svg {
+  color: #ffffff !important;
+}
+
 /* Animation keyframes */
 @keyframes slideInRight {
   from {
