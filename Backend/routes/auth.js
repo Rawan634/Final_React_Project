@@ -58,18 +58,4 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/verify", async (req, res) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
-  
-  if (!token) return res.status(401).json({ valid: false });
-  
-  try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    res.json({ valid: true });
-  } catch (err) {
-    console.error("Verify error:", err.message);
-    res.json({ valid: false, error: err.message });
-  }
-});
-
 module.exports = router;
